@@ -1,0 +1,211 @@
+package portal
+
+import (
+	"fmt"
+
+	sdkapi "sdk/api"
+	sdkutils "github.com/flarewifi/sdk-utils"
+)
+
+type PortalIndexData struct {
+	Navs             []sdkapi.PortalNavItem
+	DeviceMac        string
+	DeviceIP         string
+	IsSessionRunning bool
+	IsOnline         bool
+	SessionSummary   *sdkapi.ClientSessionSummary
+	SessionType      sdkapi.SessionType
+
+	// Admin-editable branding.
+	LogoURL    string
+	BannerURL  string
+	BannerText string
+}
+
+templ PortalIndexPage(api sdkapi.IPluginApi, data PortalIndexData) {
+	<div id="home" class="coffee-card">
+		<!-- Brand logo -->
+		<div class="brand">
+			<img class="brand-logo" src={ data.LogoURL } alt={ api.Translate("label", "Brand logo") }/>
+		</div>
+		<!-- Status pill -->
+		<div
+			hx-get={ api.Http().Helpers().UrlForRoute("portal:coffee-theme:status-bar") }
+			hx-trigger={ fmt.Sprintf("sse:%s, sse:%s",
+				sdkapi.EventSessionConnected, sdkapi.EventSessionDisconnected) }
+			hx-swap="innerHTML"
+		>
+			@StatusBar(api, data.IsSessionRunning)
+		</div>
+		<!-- Banner image -->
+		<div class="banner">
+			<img class="banner-img" src={ data.BannerURL } alt={ api.Translate("label", "Banner") }/>
+		</div>
+		<!-- Welcome / banner text -->
+		if data.BannerText != "" {
+			<p class="banner-text">{ data.BannerText }</p>
+		}
+		<!-- Device info -->
+		if data.DeviceMac != "" || data.DeviceIP != "" {
+			<div class="device-info">
+				if data.DeviceMac != "" {
+					<span>{ api.Translate("label", "MAC") }: <strong>{ data.DeviceMac }</strong></span>
+				}
+				if data.DeviceMac != "" && data.DeviceIP != "" {
+					<span class="info-sep">&middot;</span>
+				}
+				if data.DeviceIP != "" {
+					<span>{ api.Translate("label", "IP") }: <strong>{ data.DeviceIP }</strong></span>
+				}
+			</div>
+		}
+		<!-- Session summary -->
+		<div
+			hx-get={ api.Http().Helpers().UrlForRoute("portal:coffee-theme:session-info") }
+			hx-trigger={ fmt.Sprintf("sse:%s, sse:%s",
+				sdkapi.EventSessionConnected, sdkapi.EventSessionDisconnected) }
+			hx-swap="innerHTML"
+		>
+			@SessionInfo(api, data.SessionSummary, data.IsSessionRunning, data.SessionType)
+		</div>
+		<!-- Action buttons — default-size Bootstrap buttons stacked vertically
+		     (d-grid). The primary (insert coin) is filled coffee-brown; the rest
+		     are outline. -->
+		<div class="d-grid gap-2 action-buttons">
+			for _, nav := range data.Navs {
+				<a
+					href={ templ.SafeURL(nav.RouteUrl) }
+					class={ navBtnClass(nav) }
+					{ templ.Attributes(navAttrsNoClass(nav))... }
+				>
+					if nav.Icon != "" {
+						<span class="btn-icon">
+							@templ.Raw(nav.Icon)
+						</span>
+					}
+					{ nav.Label }
+				</a>
+			}
+		</div>
+		<!-- Enter voucher code (theme-specific, independent of wifi-hotspot) -->
+		<form
+			class="voucher-form"
+			method="POST"
+			action={ templ.SafeURL(api.Http().Helpers().UrlForRoute("portal:coffee-theme:voucher")) }
+		>
+			<label class="voucher-label" for="voucher-code">{ api.Translate("label", "Enter Voucher Code") }</label>
+			<div class="voucher-input-group">
+				<input
+					id="voucher-code"
+					name="voucher_code"
+					type="text"
+					class="form-control voucher-input"
+					placeholder={ api.Translate("label", "e.g. ABCD-1234") }
+					autocomplete="off"
+					autocapitalize="characters"
+					required
+				/>
+				<button type="submit" class="btn btn-coffee voucher-apply">{ api.Translate("label", "Apply") }</button>
+			</div>
+		</form>
+		<!-- Internet status -->
+		<div
+			class="internet-status"
+			hx-get={ api.Http().Helpers().UrlForRoute("portal:coffee-theme:internet-status") }
+			hx-trigger={ fmt.Sprintf("sse:%s, sse:%s",
+				sdkapi.EventInternetUp, sdkapi.EventInternetDown) }
+			hx-swap="innerHTML"
+		>
+			@InternetStatus(api, data.IsOnline)
+		</div>
+	</div>
+}
+
+templ StatusBar(api sdkapi.IPluginApi, isConnected bool) {
+	if isConnected {
+		<div class="status-pill status-connected">
+			<span class="dot"></span>{ api.Translate("label", "Connected") }
+		</div>
+	} else {
+		<div class="status-pill status-disconnected">
+			<span class="dot"></span>{ api.Translate("label", "Not Connected") }
+		</div>
+	}
+}
+
+templ SessionInfo(api sdkapi.IPluginApi, summary *sdkapi.ClientSessionSummary, isRunning bool, sessionType sdkapi.SessionType) {
+	if isRunning && summary != nil {
+		<div class="session-summary">
+			if summary.RemainingTimeSecs > 0 {
+				<div class="session-metric">
+					<span class="session-label">{ api.Translate("label", "Time Left") }</span>
+					<span id="session-time" class="session-value" data-value={ fmt.Sprintf("%d", summary.RemainingTimeSecs) }>
+						{ sdkutils.FormatTimeSecs(summary.RemainingTimeSecs) }
+					</span>
+				</div>
+			}
+			if sessionType != sdkapi.SessionTypeTime && summary.RemainingDataMb > 0 {
+				<div class="session-metric">
+					<span class="session-label">{ api.Translate("label", "Remaining Data") }</span>
+					<span class="session-value">{ sdkutils.FormatByteData(summary.RemainingDataMb) }</span>
+				</div>
+			}
+		</div>
+	}
+}
+
+templ InternetStatus(api sdkapi.IPluginApi, isOnline bool) {
+	if isOnline {
+		<p class="internet-up">{ api.Translate("label", "Internet is up") }</p>
+	} else {
+		<p class="internet-down">{ api.Translate("label", "Internet is down") }</p>
+	}
+}
+
+templ PortalLoginPage(api sdkapi.IPluginApi, csrfHTML string, data sdkapi.LoginPageData) {
+	<div id="login" class="coffee-card login-card">
+		<h2 class="login-title">{ api.Translate("label", "Admin Sign In") }</h2>
+		if data.LoginError != nil {
+			<div class="alert alert-danger">{ data.LoginError.Error() }</div>
+		}
+		<form id="login-form" method="POST" action={ templ.SafeURL(api.Http().Helpers().UrlForRoute("auth:login")) }>
+			@templ.Raw(csrfHTML)
+			<div class="mb-3">
+				<label for="username" class="form-label">{ api.Translate("label", "Username") }</label>
+				<input id="username" name="username" type="text" class="form-control" required/>
+			</div>
+			<div class="mb-3">
+				<label for="password" class="form-label">{ api.Translate("label", "Password") }</label>
+				<input id="password" name="password" type="password" class="form-control" required/>
+			</div>
+			<button type="submit" class="btn btn-coffee w-100">{ api.Translate("label", "Sign In") }</button>
+			if data.ForgotPasswordUrl != "" {
+				<a href={ templ.SafeURL(data.ForgotPasswordUrl) } class="forgot-password">{ api.Translate("label", "Forgot Password?") }</a>
+			}
+		</form>
+	</div>
+}
+
+// navBtnClass returns a default-size Bootstrap button class for each action:
+// the coin/insert-coin item is the filled coffee-brown primary, the rest are
+// outline buttons. Sizing is Bootstrap's default (.btn); only the color varies.
+func navBtnClass(nav sdkapi.PortalNavItem) string {
+	if nav.ExtraAttrs["id"] == "insert-coin-btn" {
+		return "btn btn-coffee"
+	}
+	return "btn btn-outline-coffee"
+}
+
+// navAttrsNoClass returns ExtraAttrs without "class", so the theme's own
+// .nav-btn class is the only one applied — a plugin's requested color class
+// would otherwise emit a second class attribute (HTML keeps only the first),
+// and the theme deliberately gives every tile the same coffee-brown look.
+func navAttrsNoClass(nav sdkapi.PortalNavItem) map[string]any {
+	attrs := make(map[string]any, len(nav.ExtraAttrs))
+	for k, v := range nav.ExtraAttrs {
+		if k != "class" {
+			attrs[k] = v
+		}
+	}
+	return attrs
+}

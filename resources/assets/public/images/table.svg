@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 190" width="1200" height="190" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Coffee table">
+  <defs>
+    <linearGradient id="woodTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8a5a37"/>
+      <stop offset="1" stop-color="#7a4d2e"/>
+    </linearGradient>
+    <linearGradient id="woodEdge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5f3a22"/>
+      <stop offset="1" stop-color="#43281699"/>
+    </linearGradient>
+  </defs>
+  <!-- small potted plant (ties into the leafy theme) -->
+  <g transform="translate(150 40)">
+    <g fill="none" stroke="#4a7a3f" stroke-width="5" stroke-linecap="round">
+      <path d="M20 60q-18 -30 -6 -56"/>
+      <path d="M20 60q6 -34 26 -50"/>
+      <path d="M20 60q22 -20 44 -18"/>
+    </g>
+    <g fill="#5a8f4e">
+      <path d="M6 8q16 -12 30 2q-18 10 -30 -2z"/>
+      <path d="M40 6q18 -8 30 8q-20 8 -30 -8z"/>
+      <path d="M52 34q20 -4 28 14q-22 4 -28 -14z"/>
+    </g>
+    <path d="M4 60h44l-6 26h-32z" fill="#a5603a"/>
+    <path d="M2 56h48v8h-48z" fill="#c07846"/>
+  </g>
+  <!-- coffee cup on a saucer -->
+  <g transform="translate(980 44)">
+    <ellipse cx="40" cy="70" rx="52" ry="10" fill="#3f2a1d" opacity="0.85"/>
+    <path d="M12 34h56v10a24 24 0 0 1-24 24h-8a24 24 0 0 1-24-24z" fill="#f3ead9"/>
+    <path d="M68 40h9a15 15 0 0 1 0 30h-9" fill="none" stroke="#f3ead9" stroke-width="8"/>
+    <ellipse cx="40" cy="34" rx="28" ry="6" fill="#5a3d29"/>
+    <g fill="none" stroke="#c9b48f" stroke-width="4" stroke-linecap="round" opacity="0.8">
+      <path d="M26 22a20 20 0 0 1 28 0"/>
+      <path d="M34 10a10 10 0 0 1 12 0"/>
+    </g>
+  </g>
+  <!-- table top -->
+  <rect x="0" y="96" width="1200" height="40" fill="url(#woodTop)"/>
+  <!-- table front edge -->
+  <rect x="0" y="136" width="1200" height="54" fill="url(#woodEdge)"/>
+  <!-- wood grain -->
+  <g stroke="#4a2d1a" stroke-width="2" opacity="0.35">
+    <line x1="0" y1="108" x2="1200" y2="108"/>
+    <line x1="0" y1="122" x2="1200" y2="122"/>
+  </g>
+  <g stroke="#5f3a22" stroke-width="2" opacity="0.5">
+    <line x1="0" y1="152" x2="1200" y2="152"/>
+    <line x1="0" y1="170" x2="1200" y2="170"/>
+  </g>
+</svg>

@@ -1,0 +1,48 @@
+package portal
+
+import sdkapi "sdk/api"
+
+type PortalLayoutData struct {
+	API        sdkapi.IPluginApi
+	Components  sdkapi.IThemeComponents
+	BodyClass  string
+}
+
+// PortalLayout is the shell shared by the portal index and the admin login
+// page. The khaki/brown backdrop, the green leaf corners, the wooden table at
+// the foot, and the static "Powered by Flarewifi" footer are drawn here so both
+// pages sit in the same coffee-shop scene. Decorations are rendered as absolutely
+// positioned <img> elements (resolved via PublicPath) rather than CSS
+// background-images, since a CSS url() would resolve against the bundled stylesheet
+// path, not the plugin's public assets folder.
+templ PortalLayout(data PortalLayoutData) {
+	<!DOCTYPE html>
+	<html lang="en" { data.Components.HtmlAttrs()... }>
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<title>{ data.API.Translate("label", "WiFi Hotspot") }</title>
+			@data.Components.Head()
+		</head>
+		<body class={ data.BodyClass } { data.Components.BodyAttrs()... }>
+			<!-- Leafy corner decorations -->
+			<div class="coffee-decor" aria-hidden="true">
+				<img class="leaf leaf-tl" src={ data.API.Http().Helpers().PublicPath("images/leaves.svg") } alt=""/>
+				<img class="leaf leaf-tr" src={ data.API.Http().Helpers().PublicPath("images/leaves.svg") } alt=""/>
+			</div>
+			<div id="app" class="coffee-app">
+				<div class="container">
+					@data.Components.PageContent()
+				</div>
+			</div>
+			<!-- Wooden coffee table the card sits on -->
+			<img class="coffee-table" src={ data.API.Http().Helpers().PublicPath("images/table.svg") } alt="" aria-hidden="true"/>
+			<footer class="coffee-footer">
+				<div class="container text-center">
+					<small>{ data.API.Translate("label", "Powered by") } <strong>Flarewifi</strong></small>
+				</div>
+			</footer>
+			@data.Components.Scripts()
+		</body>
+	</html>
+}

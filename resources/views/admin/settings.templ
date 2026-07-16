@@ -1,0 +1,106 @@
+package admin
+
+import sdkapi "sdk/api"
+
+type CoffeeSettingsData struct {
+	BannerText      string
+	LogoURL         string
+	BannerURL       string
+	HasCustomLogo   bool
+	HasCustomBanner bool
+}
+
+// CoffeeSettingsView renders inside the active admin theme's content area, so it
+// adds no outer page padding of its own (the theme supplies that). It is a
+// single multipart form: the welcome text plus optional logo/banner uploads,
+// each with a "reset to default" checkbox shown only when a custom image exists.
+templ CoffeeSettingsView(api sdkapi.IPluginApi, data CoffeeSettingsData) {
+	<div class="coffee-settings">
+		<div class="d-flex align-items-center gap-2 mb-1">
+			<i class="bi bi-cup-hot fs-4"></i>
+			<h1 class="h4 mb-0">{ api.Translate("label", "Coffee Theme") }</h1>
+		</div>
+		<p class="text-muted mb-4">{ api.Translate("label", "Customize the coffee-shop captive portal shown to your customers.") }</p>
+		<form
+			method="POST"
+			enctype="multipart/form-data"
+			action={ templ.SafeURL(api.Http().Helpers().UrlForRoute("admin:coffee-theme:settings:save")) }
+		>
+			<div class="card mb-3">
+				<div class="card-body">
+					<label for="banner_text" class="form-label fw-semibold">{ api.Translate("label", "Welcome Text") }</label>
+					<textarea
+						id="banner_text"
+						name="banner_text"
+						class="form-control"
+						rows="2"
+						maxlength="200"
+						placeholder={ api.Translate("label", "e.g. Grab a cup, sit back, and enjoy free WiFi") }
+					>{ data.BannerText }</textarea>
+					<div class="form-text">{ api.Translate("label", "Shown under the banner image on the portal. Leave blank to use the default.") }</div>
+				</div>
+			</div>
+			<div class="row g-3">
+				<div class="col-md-6">
+					@imageField(api, imageFieldData{
+						Title:      api.Translate("label", "Brand Logo"),
+						Hint:       api.Translate("label", "Displayed at the top of the portal. PNG, JPG, WEBP, GIF, or SVG."),
+						PreviewURL: data.LogoURL,
+						FileField:  "logo",
+						RemoveField: "remove_logo",
+						HasCustom:  data.HasCustomLogo,
+						PreviewClass: "logo-preview",
+						RemoveLabel: api.Translate("label", "Reset logo to default"),
+					})
+				</div>
+				<div class="col-md-6">
+					@imageField(api, imageFieldData{
+						Title:      api.Translate("label", "Banner Image"),
+						Hint:       api.Translate("label", "The wide banner on the portal. PNG, JPG, WEBP, GIF, or SVG."),
+						PreviewURL: data.BannerURL,
+						FileField:  "banner",
+						RemoveField: "remove_banner",
+						HasCustom:  data.HasCustomBanner,
+						PreviewClass: "banner-preview",
+						RemoveLabel: api.Translate("label", "Reset banner to default"),
+					})
+				</div>
+			</div>
+			<div class="mt-4">
+				<button type="submit" class="btn btn-primary">
+					<i class="bi bi-save me-1"></i>{ api.Translate("label", "Save Changes") }
+				</button>
+			</div>
+		</form>
+	</div>
+}
+
+type imageFieldData struct {
+	Title        string
+	Hint         string
+	PreviewURL   string
+	FileField    string
+	RemoveField  string
+	HasCustom    bool
+	PreviewClass string
+	RemoveLabel  string
+}
+
+templ imageField(api sdkapi.IPluginApi, f imageFieldData) {
+	<div class="card h-100">
+		<div class="card-body">
+			<label class="form-label fw-semibold">{ f.Title }</label>
+			<div class="image-preview mb-3">
+				<img src={ f.PreviewURL } alt={ f.Title } class={ f.PreviewClass }/>
+			</div>
+			<input type="file" name={ f.FileField } accept="image/*" class="form-control"/>
+			<div class="form-text">{ f.Hint }</div>
+			if f.HasCustom {
+				<div class="form-check mt-2">
+					<input class="form-check-input" type="checkbox" value="on" id={ f.RemoveField } name={ f.RemoveField }/>
+					<label class="form-check-label" for={ f.RemoveField }>{ f.RemoveLabel }</label>
+				</div>
+			}
+		</div>
+	</div>
+}

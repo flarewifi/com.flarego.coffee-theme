@@ -1,0 +1,12 @@
+{
+  "name": "Coffee Shop Theme",
+  "package": "com.flarego.coffee-theme",
+  "description": "A warm khaki-and-brown captive portal theme for coffee shops, with an admin-editable brand logo, banner image, and welcome text.",
+  "version": "1.0.0",
+  "system_packages": null,
+  "sdk": "",
+  "preinstall": "",
+  "postinstall": "",
+  "preuninstall": "",
+  "postuninstall": ""
+}

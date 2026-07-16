@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 260" width="260" height="260" role="img" aria-label="Leaves">
+  <defs>
+    <linearGradient id="leafA" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6fae5f"/>
+      <stop offset="1" stop-color="#3f7a37"/>
+    </linearGradient>
+    <linearGradient id="leafB" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5a8f4e"/>
+      <stop offset="1" stop-color="#356b2f"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="#4a7a3f" stroke-width="5" stroke-linecap="round">
+    <path d="M40 40q50 20 92 70"/>
+    <path d="M40 40q26 6 60 4"/>
+    <path d="M40 40q10 34 4 70"/>
+  </g>
+  <!-- leaf 1 -->
+  <g transform="translate(96 74) rotate(35)">
+    <path d="M0 0q34 -20 68 0q-34 20 -68 0z" fill="url(#leafA)"/>
+    <path d="M4 0h60" stroke="#2f5a29" stroke-width="2.5"/>
+  </g>
+  <!-- leaf 2 -->
+  <g transform="translate(58 118) rotate(78)">
+    <path d="M0 0q30 -18 60 0q-30 18 -60 0z" fill="url(#leafB)"/>
+    <path d="M4 0h52" stroke="#2f5a29" stroke-width="2.5"/>
+  </g>
+  <!-- leaf 3 -->
+  <g transform="translate(104 34) rotate(-6)">
+    <path d="M0 0q28 -16 56 0q-28 16 -56 0z" fill="url(#leafA)"/>
+    <path d="M4 0h48" stroke="#2f5a29" stroke-width="2.5"/>
+  </g>
+  <!-- small berry accents -->
+  <circle cx="150" cy="150" r="7" fill="#8b3a2f"/>
+  <circle cx="168" cy="132" r="6" fill="#a5463a"/>
+</svg>

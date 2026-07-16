@@ -1,0 +1,75 @@
+package theme
+
+import (
+	"fmt"
+	"net/http"
+	"strings"
+
+	sdkapi "sdk/api"
+
+	"com.flarego.coffee-theme/app/settings"
+	"com.flarego.coffee-theme/resources/views/portal"
+)
+
+func SetPortalTheme(api sdkapi.IPluginApi) {
+	api.Themes().NewPortalTheme(sdkapi.PortalThemeOpts{
+		JsFile:       "theme.js",
+		CssFile:      "theme.css",
+		CssLib:       sdkapi.CssLibBootstrap5,
+		PreviewImage: "images/preview.png",
+		LayoutBuilder: func(w http.ResponseWriter, r *http.Request, c sdkapi.IThemeComponents) {
+			// The login page reuses this layout; only the portal index gets the
+			// "coffee-index" body class so its card styling never leaks onto login.
+			bodyClass := "coffee-portal"
+			if strings.Contains(r.URL.Path, "/portal/index") {
+				bodyClass += " coffee-index"
+			}
+			data := portal.PortalLayoutData{API: api, Components: c, BodyClass: bodyClass}
+			if err := portal.PortalLayout(data).Render(r.Context(), w); err != nil {
+				fmt.Fprintf(w, "<p>Error rendering portal layout: %s</p>", err.Error())
+			}
+		},
+		LoginPageFactory: func(w http.ResponseWriter, r *http.Request, data sdkapi.LoginPageData) sdkapi.ViewPage {
+			csrfHTML := api.Http().Helpers().CsrfHtmlTag(r)
+			data.ForgotPasswordUrl = api.Http().Helpers().UrlForPkgRoute("com.flarego.core", "auth:send-otp")
+			return sdkapi.ViewPage{
+				PageContent: portal.PortalLoginPage(api, csrfHTML, data),
+			}
+		},
+		IndexPageFactory: func(w http.ResponseWriter, r *http.Request) sdkapi.ViewPage {
+			ctx := r.Context()
+			cfg := settings.Get(api)
+
+			indexData := portal.PortalIndexData{
+				Navs:       api.Http().Navs().GetPortalItems(r),
+				IsOnline:   api.Machine().IsOnline(),
+				LogoURL:    settings.LogoURL(api, cfg),
+				BannerURL:  settings.BannerURL(api, cfg),
+				BannerText: settings.BannerText(api, cfg),
+			}
+
+			clnt, err := api.Http().GetClientDevice(r)
+			if err != nil {
+				api.Logger().Error(fmt.Sprintf("coffee-theme portal: get client device error: %v", err))
+				return sdkapi.ViewPage{PageContent: portal.PortalIndexPage(api, indexData)}
+			}
+
+			indexData.DeviceMac = clnt.MacAddr()
+			indexData.DeviceIP = clnt.IpAddr()
+
+			session, ok := api.SessionsMgr().RunningSession(clnt)
+			indexData.IsSessionRunning = ok
+			if ok {
+				indexData.SessionType = session.Type()
+				summary, err := api.SessionsMgr().SessionSummary(ctx, clnt)
+				if err != nil {
+					api.Logger().Error(fmt.Sprintf("coffee-theme portal: session summary error: %v", err))
+				} else {
+					indexData.SessionSummary = summary
+				}
+			}
+
+			return sdkapi.ViewPage{PageContent: portal.PortalIndexPage(api, indexData)}
+		},
+	})
+}

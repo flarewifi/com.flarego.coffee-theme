@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="300" height="120" role="img" aria-label="Coffee WiFi logo">
+  <defs>
+    <linearGradient id="cupG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7d5a3f"/>
+      <stop offset="1" stop-color="#5a3d29"/>
+    </linearGradient>
+  </defs>
+  <!-- steam / wifi arcs -->
+  <g fill="none" stroke="#a1815e" stroke-linecap="round">
+    <path d="M52 30a34 34 0 0 1 48 0" stroke-width="6"/>
+    <path d="M63 41a19 19 0 0 1 26 0" stroke-width="6"/>
+    <circle cx="76" cy="52" r="4" fill="#6f4e37" stroke="none"/>
+  </g>
+  <!-- saucer -->
+  <ellipse cx="76" cy="100" rx="46" ry="8" fill="#4a3324"/>
+  <!-- cup body -->
+  <path d="M44 60h64v12a26 26 0 0 1-26 26h-12a26 26 0 0 1-26-26z" fill="url(#cupG)"/>
+  <!-- handle -->
+  <path d="M108 64h8a14 14 0 0 1 0 28h-8" fill="none" stroke="#6f4e37" stroke-width="8"/>
+  <!-- coffee surface -->
+  <ellipse cx="76" cy="60" rx="32" ry="7" fill="#3f2a1d"/>
+  <!-- wordmark -->
+  <text x="140" y="62" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="700" fill="#3f2a1d">Coffee</text>
+  <text x="140" y="94" font-family="system-ui, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="4" fill="#6f4e37">WIFI</text>
+</svg>
