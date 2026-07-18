@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	sdkapi "sdk/api"
-	sdkutils "github.com/flarewifi/sdk-utils"
+	sdkutils "github.com/flarewifi/sdk-utils/v2"
 )
 
 type PortalIndexData struct {
@@ -13,8 +13,7 @@ type PortalIndexData struct {
 	DeviceIP         string
 	IsSessionRunning bool
 	IsOnline         bool
-	SessionSummary   *sdkapi.ClientSessionSummary
-	SessionType      sdkapi.SessionType
+	Session          sdkapi.DeviceWifiSession
 
 	// Admin-editable branding.
 	LogoURL    string
@@ -32,7 +31,7 @@ templ PortalIndexPage(api sdkapi.IPluginApi, data PortalIndexData) {
 		<div
 			hx-get={ api.Http().Helpers().UrlForRoute("portal:coffee-theme:status-bar") }
 			hx-trigger={ fmt.Sprintf("sse:%s, sse:%s",
-				sdkapi.EventSessionConnected, sdkapi.EventSessionDisconnected) }
+				sdkapi.PortalEventSessionConnected, sdkapi.PortalEventSessionDisconnected) }
 			hx-swap="innerHTML"
 		>
 			@StatusBar(api, data.IsSessionRunning)
@@ -63,10 +62,10 @@ templ PortalIndexPage(api sdkapi.IPluginApi, data PortalIndexData) {
 		<div
 			hx-get={ api.Http().Helpers().UrlForRoute("portal:coffee-theme:session-info") }
 			hx-trigger={ fmt.Sprintf("sse:%s, sse:%s",
-				sdkapi.EventSessionConnected, sdkapi.EventSessionDisconnected) }
+				sdkapi.PortalEventSessionConnected, sdkapi.PortalEventSessionDisconnected) }
 			hx-swap="innerHTML"
 		>
-			@SessionInfo(api, data.SessionSummary, data.IsSessionRunning, data.SessionType)
+			@SessionInfo(api, data.Session, data.IsSessionRunning)
 		</div>
 		<!-- Action buttons — default-size Bootstrap buttons stacked vertically
 		     (d-grid). The primary (insert coin) is filled coffee-brown; the rest
@@ -133,21 +132,21 @@ templ StatusBar(api sdkapi.IPluginApi, isConnected bool) {
 	}
 }
 
-templ SessionInfo(api sdkapi.IPluginApi, summary *sdkapi.ClientSessionSummary, isRunning bool, sessionType sdkapi.SessionType) {
-	if isRunning && summary != nil {
+templ SessionInfo(api sdkapi.IPluginApi, session sdkapi.DeviceWifiSession, isRunning bool) {
+	if isRunning && !session.Exhausted() {
 		<div class="session-summary">
-			if summary.RemainingTimeSecs > 0 {
+			if session.EnforcesTime() && session.TimeSecs > 0 {
 				<div class="session-metric">
 					<span class="session-label">{ api.Translate("label", "Time Left") }</span>
-					<span id="session-time" class="session-value" data-value={ fmt.Sprintf("%d", summary.RemainingTimeSecs) }>
-						{ sdkutils.FormatTimeSecs(summary.RemainingTimeSecs) }
+					<span id="session-time" class="session-value" data-value={ fmt.Sprintf("%d", session.TimeSecs) }>
+						{ sdkutils.FormatTimeSecs(session.TimeSecs) }
 					</span>
 				</div>
 			}
-			if sessionType != sdkapi.SessionTypeTime && summary.RemainingDataMb > 0 {
+			if session.EnforcesData() && session.DataMb > 0 {
 				<div class="session-metric">
 					<span class="session-label">{ api.Translate("label", "Remaining Data") }</span>
-					<span class="session-value">{ sdkutils.FormatByteData(summary.RemainingDataMb) }</span>
+					<span class="session-value">{ sdkutils.FormatByteData(session.DataMb) }</span>
 				</div>
 			}
 		</div>
