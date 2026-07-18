@@ -37,7 +37,6 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 			}
 		},
 		IndexPageFactory: func(w http.ResponseWriter, r *http.Request) sdkapi.ViewPage {
-			ctx := r.Context()
 			cfg := settings.Get(api)
 
 			indexData := portal.PortalIndexData{
@@ -57,17 +56,8 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 			indexData.DeviceMac = clnt.MacAddr()
 			indexData.DeviceIP = clnt.IpAddr()
 
-			session, ok := api.SessionsMgr().RunningSession(clnt)
-			indexData.IsSessionRunning = ok
-			if ok {
-				indexData.SessionType = session.Type()
-				summary, err := api.SessionsMgr().SessionSummary(ctx, clnt)
-				if err != nil {
-					api.Logger().Error(fmt.Sprintf("coffee-theme portal: session summary error: %v", err))
-				} else {
-					indexData.SessionSummary = summary
-				}
-			}
+			indexData.IsSessionRunning = clnt.IsConnected()
+			indexData.Session = clnt.WifiSession()
 
 			return sdkapi.ViewPage{PageContent: portal.PortalIndexPage(api, indexData)}
 		},

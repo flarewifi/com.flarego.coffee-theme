@@ -65,9 +65,9 @@ func PortalVoucherCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 			return
 		}
 
-		// Activation only creates the session; grant internet if not already on.
-		if !api.SessionsMgr().IsConnected(clnt) {
-			if err := api.SessionsMgr().Connect(ctx, clnt, api.Translate("info", "Connected via voucher")); err != nil {
+		// Activation only adds the session; grant internet if not already on.
+		if !clnt.IsConnected() {
+			if err := clnt.Connect(ctx, api.Translate("info", "Connected via voucher")); err != nil {
 				api.Logger().Error("coffee-theme: connect after voucher failed: " + err.Error())
 				res.FlashMsg(w, r, api.Translate("error", "Voucher applied, but connection failed. Please try again"), sdkapi.FlashMsgError)
 				res.RedirectToPortal(w, r)
