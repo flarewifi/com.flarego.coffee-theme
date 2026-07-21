@@ -13,7 +13,7 @@ type PortalIndexData struct {
 	DeviceIP         string
 	IsSessionRunning bool
 	IsOnline         bool
-	Session          sdkapi.DeviceWifiSession
+	Session          sdkapi.SessionData
 
 	// Admin-editable branding.
 	LogoURL    string
@@ -132,7 +132,7 @@ templ StatusBar(api sdkapi.IPluginApi, isConnected bool) {
 	}
 }
 
-templ SessionInfo(api sdkapi.IPluginApi, session sdkapi.DeviceWifiSession, isRunning bool) {
+templ SessionInfo(api sdkapi.IPluginApi, session sdkapi.SessionData, isRunning bool) {
 	if isRunning && !session.Exhausted() {
 		<div class="session-summary">
 			if session.EnforcesTime() && session.TimeSecs > 0 {

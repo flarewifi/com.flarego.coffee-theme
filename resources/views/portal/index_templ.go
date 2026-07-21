@@ -21,7 +21,7 @@ type PortalIndexData struct {
 	DeviceIP         string
 	IsSessionRunning bool
 	IsOnline         bool
-	Session          sdkapi.DeviceWifiSession
+	Session          sdkapi.SessionData
 
 	// Admin-editable branding.
 	LogoURL    string
@@ -512,7 +512,7 @@ func StatusBar(api sdkapi.IPluginApi, isConnected bool) templ.Component {
 	})
 }
 
-func SessionInfo(api sdkapi.IPluginApi, session sdkapi.DeviceWifiSession, isRunning bool) templ.Component {
+func SessionInfo(api sdkapi.IPluginApi, session sdkapi.SessionData, isRunning bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {

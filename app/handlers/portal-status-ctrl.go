@@ -19,7 +19,7 @@ func PortalStatusBarCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 		if err != nil {
 			api.Logger().Error(fmt.Sprintf("coffee-theme status-bar: get client device error: %v", err))
 		} else {
-			isConnected = clnt.IsConnected()
+			isConnected = clnt.Session().IsConnected()
 		}
 
 		portal.StatusBar(api, isConnected).Render(r.Context(), w)
@@ -30,14 +30,14 @@ func PortalStatusBarCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 func PortalSessionInfoCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var isRunning bool
-		var session sdkapi.DeviceWifiSession
+		var session sdkapi.SessionData
 
 		clnt, err := api.Http().GetClientDevice(r)
 		if err != nil {
 			api.Logger().Error(fmt.Sprintf("coffee-theme session-info: get client device error: %v", err))
 		} else {
-			isRunning = clnt.IsConnected()
-			session = clnt.WifiSession()
+			isRunning = clnt.Session().IsConnected()
+			session = clnt.Session().SessionData()
 		}
 
 		portal.SessionInfo(api, session, isRunning).Render(r.Context(), w)
