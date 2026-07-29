@@ -14,6 +14,12 @@ function initSessionTimer() {
   var el = document.getElementById('session-time');
   if (!el) return;
 
+  // A paused session's counters are frozen server-side, so ticking here would
+  // show time draining that is not actually being spent. The client stays
+  // 'connected' while paused (it is blocked at the firewall, not disconnected),
+  // so connectedness alone cannot answer this -- read the paused flag.
+  if (el.getAttribute('data-paused') === 'true') return;
+
   var secs = parseInt(el.getAttribute('data-value'), 10);
   if (isNaN(secs) || secs <= 0) return;
 

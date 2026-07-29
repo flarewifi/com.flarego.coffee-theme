@@ -138,7 +138,7 @@ templ SessionInfo(api sdkapi.IPluginApi, session sdkapi.SessionData, isRunning b
 			if session.EnforcesTime() && session.TimeSecs > 0 {
 				<div class="session-metric">
 					<span class="session-label">{ api.Translate("label", "Time Left") }</span>
-					<span id="session-time" class="session-value" data-value={ fmt.Sprintf("%d", session.TimeSecs) }>
+					<span id="session-time" class="session-value" data-value={ fmt.Sprintf("%d", session.TimeSecs) } data-paused={ fmt.Sprintf("%t", session.IsPaused) }>
 						{ sdkutils.FormatTimeSecs(session.TimeSecs) }
 					</span>
 				</div>
