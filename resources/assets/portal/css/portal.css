@@ -314,3 +314,177 @@ body.coffee-portal {
 @media (min-width: 768px) {
   .coffee-table { margin-top: -50px; }
 }
+
+/* ============================================================================
+ * Global portal shell — plain Bootstrap 5 classes used by CORE and OTHER
+ * PLUGINS (payment options, insert-coin, voucher redemption, pppoe status,
+ * etc.), not just this theme's own bespoke markup. Those pages deliberately
+ * target Bootstrap's real class names — see the "theme glass card" / "Default
+ * Bootstrap .btn-secondary" comments in core/resources/views/portal/payments/
+ * payment-options.templ — so ANY theme can hook in via plain CSS without the
+ * core/plugin views needing to know this theme exists. Scoped under
+ * body.coffee-portal (present on every page this theme renders) so nothing
+ * here leaks outside the portal even if this stylesheet were ever loaded
+ * elsewhere.
+ *
+ * Two techniques, both "recolor only, never resize/reshape":
+ *  1. Re-declaring Bootstrap 5.3's own body-level custom properties
+ *     (--bs-body-bg, --bs-border-color, etc.) — .card, .form-control,
+ *     .list-group-item and the whole .modal family already reference these
+ *     internally (the same mechanism Bootstrap's own [data-bs-theme=dark]
+ *     uses), so this one block retints all of them with no selector of its
+ *     own — and can never outrank a more specific existing rule (e.g.
+ *     .login-card .form-control above), since it changes no selector at all.
+ *  2. Explicit --bs-btn-*/-rgb/-subtle/-emphasis overrides for the handful
+ *     of components (buttons, badges, alerts, progress fills) that hardcode
+ *     their own color instead of inheriting the body-level variables.
+ * ==========================================================================*/
+
+body.coffee-portal {
+  --bs-body-bg: var(--coffee-card);
+  --bs-body-color: var(--coffee-ink);
+  --bs-body-color-rgb: 47, 33, 24;
+  --bs-emphasis-color: var(--coffee-espresso);
+  --bs-secondary-color: rgba(109, 90, 73, 0.85);
+  --bs-secondary-bg: rgba(111, 78, 55, 0.08);
+  --bs-tertiary-bg: rgba(111, 78, 55, 0.05);
+  /* .bg-body-tertiary/.bg-light render at FORCED full opacity (Bootstrap's
+   * own utility sets --bs-bg-opacity:1), so these need a real solid pale
+   * swatch — the cream tone, not the saturated brown accent at full strength. */
+  --bs-tertiary-bg-rgb: 243, 234, 217;
+  --bs-border-color: rgba(111, 78, 55, 0.18);
+  --bs-border-color-translucent: rgba(111, 78, 55, 0.18);
+  --bs-heading-color: var(--coffee-espresso);
+  --bs-link-color: var(--coffee-brown);
+  --bs-link-hover-color: var(--coffee-espresso);
+
+  /* .text-*/.bg-*/.badge/.progress-bar utilities read these instead. */
+  --bs-primary-rgb: 111, 78, 55;
+  --bs-secondary-rgb: 109, 90, 73;
+  --bs-success-rgb: 90, 143, 78;
+  --bs-danger-rgb: 161, 64, 31;
+  --bs-light-rgb: 243, 234, 217;
+  --bs-secondary-bg-subtle: rgba(109, 90, 73, 0.12);
+  --bs-secondary-border-subtle: rgba(109, 90, 73, 0.3);
+  --bs-secondary-text-emphasis: var(--coffee-espresso);
+}
+
+/* Buttons — same --bs-btn-* contract as .btn-coffee/.btn-outline-coffee
+ * above, just targeting Bootstrap's own semantic class names instead of the
+ * bespoke one, so a plain <button class="btn btn-primary"> from core or
+ * another plugin comes out looking like it belongs to this theme. */
+body.coffee-portal .btn-primary {
+  --bs-btn-color: #fff5e9;
+  --bs-btn-bg: var(--coffee-brown);
+  --bs-btn-border-color: var(--coffee-brown);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--coffee-espresso);
+  --bs-btn-hover-border-color: var(--coffee-espresso);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--coffee-espresso);
+  --bs-btn-active-border-color: var(--coffee-espresso);
+  --bs-btn-disabled-color: #fff5e9;
+  --bs-btn-disabled-bg: var(--coffee-tan);
+  --bs-btn-disabled-border-color: var(--coffee-tan);
+}
+body.coffee-portal .btn-outline-primary {
+  --bs-btn-color: var(--coffee-brown);
+  --bs-btn-border-color: rgba(111, 78, 55, 0.4);
+  --bs-btn-hover-color: var(--coffee-espresso);
+  --bs-btn-hover-bg: var(--coffee-cream);
+  --bs-btn-hover-border-color: var(--coffee-tan);
+  --bs-btn-active-color: var(--coffee-espresso);
+  --bs-btn-active-bg: var(--coffee-cream);
+  --bs-btn-active-border-color: var(--coffee-tan);
+}
+/* Secondary / neutral — a khaki fill, deliberately paler than the brown
+ * primary so a Cancel/Close/Back action never reads as the main CTA. Covers
+ * the legacy Bootstrap 3 .btn-default some plugins still emit, and .btn-light
+ * (visually the same "neutral" role as secondary). */
+body.coffee-portal .btn-secondary,
+body.coffee-portal .btn-default,
+body.coffee-portal .btn-light {
+  --bs-btn-color: var(--coffee-espresso);
+  --bs-btn-bg: var(--coffee-cream);
+  --bs-btn-border-color: var(--coffee-khaki-dark);
+  --bs-btn-hover-color: #fff5e9;
+  --bs-btn-hover-bg: var(--coffee-khaki-dark);
+  --bs-btn-hover-border-color: var(--coffee-khaki-dark);
+  --bs-btn-active-color: #fff5e9;
+  --bs-btn-active-bg: var(--coffee-khaki-dark);
+  --bs-btn-active-border-color: var(--coffee-khaki-dark);
+  --bs-btn-disabled-color: var(--coffee-tan);
+  --bs-btn-disabled-bg: var(--coffee-cream);
+  --bs-btn-disabled-border-color: var(--coffee-khaki);
+}
+body.coffee-portal .btn-outline-secondary,
+body.coffee-portal .btn-outline-light {
+  --bs-btn-color: var(--coffee-tan);
+  --bs-btn-border-color: rgba(111, 78, 55, 0.35);
+  --bs-btn-hover-color: #fff5e9;
+  --bs-btn-hover-bg: var(--coffee-khaki-dark);
+  --bs-btn-hover-border-color: var(--coffee-khaki-dark);
+  --bs-btn-active-color: #fff5e9;
+  --bs-btn-active-bg: var(--coffee-khaki-dark);
+  --bs-btn-active-border-color: var(--coffee-khaki-dark);
+}
+/* Success / danger / warning / info keep their semantic meaning, tinted to
+ * the theme's own leaf-green/rust palette instead of Bootstrap's stock
+ * colors; warning/info borrow the tan/khaki neutrals since the theme's own
+ * palette has no separate "cool" hue to draw on. */
+body.coffee-portal .btn-success {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--coffee-leaf);
+  --bs-btn-border-color: var(--coffee-leaf);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #45703c;
+  --bs-btn-hover-border-color: #45703c;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #45703c;
+  --bs-btn-active-border-color: #45703c;
+}
+body.coffee-portal .btn-outline-success {
+  --bs-btn-color: var(--coffee-leaf);
+  --bs-btn-border-color: var(--coffee-leaf);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--coffee-leaf);
+  --bs-btn-hover-border-color: var(--coffee-leaf);
+}
+body.coffee-portal .btn-danger {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #a1401f;
+  --bs-btn-border-color: #a1401f;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #7f3216;
+  --bs-btn-hover-border-color: #7f3216;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #7f3216;
+  --bs-btn-active-border-color: #7f3216;
+}
+body.coffee-portal .btn-outline-danger {
+  --bs-btn-color: #a1401f;
+  --bs-btn-border-color: #a1401f;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #a1401f;
+  --bs-btn-hover-border-color: #a1401f;
+}
+body.coffee-portal .btn-warning {
+  --bs-btn-color: var(--coffee-espresso);
+  --bs-btn-bg: var(--coffee-tan);
+  --bs-btn-border-color: var(--coffee-tan);
+  --bs-btn-hover-color: #fff5e9;
+  --bs-btn-hover-bg: var(--coffee-khaki-dark);
+  --bs-btn-hover-border-color: var(--coffee-khaki-dark);
+}
+body.coffee-portal .btn-info {
+  --bs-btn-color: var(--coffee-espresso);
+  --bs-btn-bg: var(--coffee-khaki);
+  --bs-btn-border-color: var(--coffee-khaki);
+  --bs-btn-hover-color: var(--coffee-espresso);
+  --bs-btn-hover-bg: var(--coffee-khaki-dark);
+  --bs-btn-hover-border-color: var(--coffee-khaki-dark);
+}
+body.coffee-portal .btn-link {
+  --bs-btn-color: var(--coffee-brown);
+  --bs-btn-hover-color: var(--coffee-espresso);
+}
