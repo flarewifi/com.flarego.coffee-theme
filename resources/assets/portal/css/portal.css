@@ -335,9 +335,10 @@ body.coffee-portal {
  *     uses), so this one block retints all of them with no selector of its
  *     own — and can never outrank a more specific existing rule (e.g.
  *     .login-card .form-control above), since it changes no selector at all.
- *  2. Explicit --bs-btn-*/-rgb/-subtle/-emphasis overrides for the handful
- *     of components (buttons, badges, alerts, progress fills) that hardcode
- *     their own color instead of inheriting the body-level variables.
+ *  2. Explicit --bs-btn-, -rgb, -subtle, and -emphasis variable overrides for
+ *     the handful of components (buttons, badges, alerts, progress fills)
+ *     that hardcode their own color instead of inheriting the body-level
+ *     variables.
  * ==========================================================================*/
 
 body.coffee-portal {
@@ -358,7 +359,7 @@ body.coffee-portal {
   --bs-link-color: var(--coffee-brown);
   --bs-link-hover-color: var(--coffee-espresso);
 
-  /* .text-*/.bg-*/.badge/.progress-bar utilities read these instead. */
+  /* .text-*, .bg-*, .badge, .progress-bar utilities read these instead. */
   --bs-primary-rgb: 111, 78, 55;
   --bs-secondary-rgb: 109, 90, 73;
   --bs-success-rgb: 90, 143, 78;
