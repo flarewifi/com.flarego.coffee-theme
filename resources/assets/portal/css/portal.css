@@ -192,6 +192,7 @@ body.coffee-portal {
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: var(--coffee-espresso);
   --bs-btn-hover-border-color: var(--coffee-espresso);
+  --bs-btn-focus-shadow-rgb: 111, 78, 55;
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: var(--coffee-espresso);
   --bs-btn-active-border-color: var(--coffee-espresso);
@@ -203,6 +204,7 @@ body.coffee-portal {
 .btn-outline-coffee {
   --bs-btn-color: var(--coffee-brown);
   --bs-btn-border-color: rgba(111, 78, 55, 0.4);
+  --bs-btn-focus-shadow-rgb: 111, 78, 55;
   --bs-btn-hover-color: var(--coffee-espresso);
   --bs-btn-hover-bg: var(--coffee-cream);
   --bs-btn-hover-border-color: var(--coffee-tan);
@@ -358,7 +360,16 @@ body.coffee-portal {
   --bs-heading-color: var(--coffee-espresso);
   --bs-link-color: var(--coffee-brown);
   --bs-link-hover-color: var(--coffee-espresso);
+  /* Multi-word link vars need their -rgb twins too — .link-* utilities and
+   * .btn-link derive rgba() from these, not from the hex form. */
+  --bs-link-color-rgb: 111, 78, 55;
+  --bs-link-hover-color-rgb: 63, 42, 29;
+  --bs-focus-ring-color: rgba(111, 78, 55, 0.25);
 
+  /* Nothing inside vendored Bootstrap reads --bs-primary (only -rgb), but
+   * core views and plugins do (e.g. --bs-nav-underline-link-active-color:
+   * var(--bs-primary)) — set both so no consumer falls back to stock blue. */
+  --bs-primary: var(--coffee-brown);
   /* .text-*, .bg-*, .badge, .progress-bar utilities read these instead. */
   --bs-primary-rgb: 111, 78, 55;
   --bs-secondary-rgb: 109, 90, 73;
@@ -368,6 +379,12 @@ body.coffee-portal {
   --bs-secondary-bg-subtle: rgba(109, 90, 73, 0.12);
   --bs-secondary-border-subtle: rgba(109, 90, 73, 0.3);
   --bs-secondary-text-emphasis: var(--coffee-espresso);
+  /* Primary tonal family — accordion active state, .alert-primary, the
+   * *-subtle utilities. Derived from --coffee-brown: emphasis = espresso,
+   * bg-subtle = brown tinted ~80%, border-subtle = tinted ~60%. */
+  --bs-primary-text-emphasis: var(--coffee-espresso);
+  --bs-primary-bg-subtle: #e2dcd7;
+  --bs-primary-border-subtle: #c5b8af;
 }
 
 /* Buttons — same --bs-btn-* contract as .btn-coffee/.btn-outline-coffee
@@ -381,6 +398,7 @@ body.coffee-portal .btn-primary {
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: var(--coffee-espresso);
   --bs-btn-hover-border-color: var(--coffee-espresso);
+  --bs-btn-focus-shadow-rgb: 111, 78, 55;
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: var(--coffee-espresso);
   --bs-btn-active-border-color: var(--coffee-espresso);
@@ -391,6 +409,7 @@ body.coffee-portal .btn-primary {
 body.coffee-portal .btn-outline-primary {
   --bs-btn-color: var(--coffee-brown);
   --bs-btn-border-color: rgba(111, 78, 55, 0.4);
+  --bs-btn-focus-shadow-rgb: 111, 78, 55;
   --bs-btn-hover-color: var(--coffee-espresso);
   --bs-btn-hover-bg: var(--coffee-cream);
   --bs-btn-hover-border-color: var(--coffee-tan);
@@ -408,6 +427,7 @@ body.coffee-portal .btn-light {
   --bs-btn-color: var(--coffee-espresso);
   --bs-btn-bg: var(--coffee-cream);
   --bs-btn-border-color: var(--coffee-khaki-dark);
+  --bs-btn-focus-shadow-rgb: 179, 155, 115;
   --bs-btn-hover-color: #fff5e9;
   --bs-btn-hover-bg: var(--coffee-khaki-dark);
   --bs-btn-hover-border-color: var(--coffee-khaki-dark);
@@ -422,6 +442,7 @@ body.coffee-portal .btn-outline-secondary,
 body.coffee-portal .btn-outline-light {
   --bs-btn-color: var(--coffee-tan);
   --bs-btn-border-color: rgba(111, 78, 55, 0.35);
+  --bs-btn-focus-shadow-rgb: 179, 155, 115;
   --bs-btn-hover-color: #fff5e9;
   --bs-btn-hover-bg: var(--coffee-khaki-dark);
   --bs-btn-hover-border-color: var(--coffee-khaki-dark);
@@ -437,6 +458,7 @@ body.coffee-portal .btn-success {
   --bs-btn-color: #fff;
   --bs-btn-bg: var(--coffee-leaf);
   --bs-btn-border-color: var(--coffee-leaf);
+  --bs-btn-focus-shadow-rgb: 90, 143, 78;
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #45703c;
   --bs-btn-hover-border-color: #45703c;
@@ -447,6 +469,7 @@ body.coffee-portal .btn-success {
 body.coffee-portal .btn-outline-success {
   --bs-btn-color: var(--coffee-leaf);
   --bs-btn-border-color: var(--coffee-leaf);
+  --bs-btn-focus-shadow-rgb: 90, 143, 78;
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: var(--coffee-leaf);
   --bs-btn-hover-border-color: var(--coffee-leaf);
@@ -455,6 +478,7 @@ body.coffee-portal .btn-danger {
   --bs-btn-color: #fff;
   --bs-btn-bg: #a1401f;
   --bs-btn-border-color: #a1401f;
+  --bs-btn-focus-shadow-rgb: 161, 64, 31;
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #7f3216;
   --bs-btn-hover-border-color: #7f3216;
@@ -465,6 +489,7 @@ body.coffee-portal .btn-danger {
 body.coffee-portal .btn-outline-danger {
   --bs-btn-color: #a1401f;
   --bs-btn-border-color: #a1401f;
+  --bs-btn-focus-shadow-rgb: 161, 64, 31;
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #a1401f;
   --bs-btn-hover-border-color: #a1401f;
@@ -473,6 +498,7 @@ body.coffee-portal .btn-warning {
   --bs-btn-color: var(--coffee-espresso);
   --bs-btn-bg: var(--coffee-tan);
   --bs-btn-border-color: var(--coffee-tan);
+  --bs-btn-focus-shadow-rgb: 161, 129, 94;
   --bs-btn-hover-color: #fff5e9;
   --bs-btn-hover-bg: var(--coffee-khaki-dark);
   --bs-btn-hover-border-color: var(--coffee-khaki-dark);
@@ -481,6 +507,7 @@ body.coffee-portal .btn-info {
   --bs-btn-color: var(--coffee-espresso);
   --bs-btn-bg: var(--coffee-khaki);
   --bs-btn-border-color: var(--coffee-khaki);
+  --bs-btn-focus-shadow-rgb: 205, 184, 145;
   --bs-btn-hover-color: var(--coffee-espresso);
   --bs-btn-hover-bg: var(--coffee-khaki-dark);
   --bs-btn-hover-border-color: var(--coffee-khaki-dark);
@@ -488,4 +515,82 @@ body.coffee-portal .btn-info {
 body.coffee-portal .btn-link {
   --bs-btn-color: var(--coffee-brown);
   --bs-btn-hover-color: var(--coffee-espresso);
+  --bs-btn-focus-shadow-rgb: 111, 78, 55;
+}
+
+/* ----------------------------------------------------------------------------
+ * Component-scoped Bootstrap variables. These are declared inside each
+ * component's own selector in vendored Bootstrap (e.g. .nav-pills {
+ * --bs-nav-pills-link-active-bg: #0d6efd }), so the body-level remap above
+ * can never reach them — a custom property set on the element beats any
+ * inherited value. Re-declared on the identical selectors; this bundle loads
+ * after core's global Bootstrap, so source order wins without !important.
+ * ------------------------------------------------------------------------- */
+body.coffee-portal .dropdown-menu {
+  --bs-dropdown-link-active-color: #fff5e9;
+  --bs-dropdown-link-active-bg: var(--coffee-brown);
+}
+body.coffee-portal .nav-pills {
+  --bs-nav-pills-link-active-color: #fff5e9;
+  --bs-nav-pills-link-active-bg: var(--coffee-brown);
+}
+body.coffee-portal .accordion {
+  --bs-accordion-btn-focus-box-shadow: 0 0 0 0.25rem rgba(111, 78, 55, 0.25);
+}
+body.coffee-portal .pagination {
+  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(111, 78, 55, 0.25);
+  --bs-pagination-active-color: #fff5e9;
+  --bs-pagination-active-bg: var(--coffee-brown);
+  --bs-pagination-active-border-color: var(--coffee-brown);
+}
+body.coffee-portal .progress,
+body.coffee-portal .progress-stacked {
+  --bs-progress-bar-color: #fff5e9;
+  --bs-progress-bar-bg: var(--coffee-brown);
+}
+body.coffee-portal .list-group {
+  --bs-list-group-active-color: #fff5e9;
+  --bs-list-group-active-bg: var(--coffee-brown);
+  --bs-list-group-active-border-color: var(--coffee-brown);
+}
+body.coffee-portal .btn-close {
+  --bs-btn-close-focus-shadow: 0 0 0 0.25rem rgba(111, 78, 55, 0.25);
+}
+
+/* ----------------------------------------------------------------------------
+ * Hardcoded Bootstrap rules with no variable at all in 5.3.3 — form focus
+ * borders/shadows, checked checks/switches, range thumbs. Overridden with
+ * real rules; the soft tint #b7a79b is --coffee-brown tinted ~50% (the same
+ * derivation Bootstrap uses for its own #86b7fe focus border).
+ * ------------------------------------------------------------------------- */
+body.coffee-portal .form-control:focus,
+body.coffee-portal .form-select:focus,
+body.coffee-portal .form-check-input:focus {
+  border-color: #b7a79b;
+  box-shadow: 0 0 0 0.25rem rgba(111, 78, 55, 0.25);
+}
+body.coffee-portal .form-check-input:checked,
+body.coffee-portal .form-check-input[type=checkbox]:indeterminate {
+  background-color: var(--coffee-brown);
+  border-color: var(--coffee-brown);
+}
+body.coffee-portal .nav-link:focus-visible {
+  box-shadow: 0 0 0 0.25rem rgba(111, 78, 55, 0.25);
+}
+/* -webkit- and -moz- selectors must stay separate rules: one unrecognized
+ * vendor pseudo-element voids the whole rule in the other browser. */
+body.coffee-portal .form-range::-webkit-slider-thumb { background-color: var(--coffee-brown); }
+body.coffee-portal .form-range::-moz-range-thumb { background-color: var(--coffee-brown); }
+body.coffee-portal .form-range::-webkit-slider-thumb:active { background-color: #b7a79b; }
+body.coffee-portal .form-range::-moz-range-thumb:active { background-color: #b7a79b; }
+body.coffee-portal .form-range:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.25rem rgba(111, 78, 55, 0.25);
+}
+body.coffee-portal .form-range:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 0.25rem rgba(111, 78, 55, 0.25);
+}
+/* The form-switch focus knob is an SVG data-URI (cannot read a var()) —
+ * re-declared with the soft tint URL-encoded. */
+body.coffee-portal .form-switch .form-check-input:focus {
+  --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23b7a79b'/%3e%3c/svg%3e");
 }
