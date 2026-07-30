@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	sdkapi "sdk/api"
-	sdkutils "github.com/flarewifi/sdk-utils/v2"
 )
 
 type PortalIndexData struct {
@@ -14,6 +13,7 @@ type PortalIndexData struct {
 	IsSessionRunning bool
 	IsOnline         bool
 	Session          sdkapi.SessionData
+	Client           sdkapi.IClientDevice
 
 	// Admin-editable branding.
 	LogoURL    string
@@ -65,7 +65,7 @@ templ PortalIndexPage(api sdkapi.IPluginApi, data PortalIndexData) {
 				sdkapi.PortalEventSessionConnected, sdkapi.PortalEventSessionDisconnected) }
 			hx-swap="innerHTML"
 		>
-			@SessionInfo(api, data.Session, data.IsSessionRunning)
+			@SessionInfo(api, data.Client, data.Session, data.IsSessionRunning)
 		</div>
 		<!-- Action buttons — default-size Bootstrap buttons stacked vertically
 		     (d-grid). The primary (insert coin) is filled coffee-brown; the rest
@@ -132,21 +132,19 @@ templ StatusBar(api sdkapi.IPluginApi, isConnected bool) {
 	}
 }
 
-templ SessionInfo(api sdkapi.IPluginApi, session sdkapi.SessionData, isRunning bool) {
+templ SessionInfo(api sdkapi.IPluginApi, clnt sdkapi.IClientDevice, session sdkapi.SessionData, isRunning bool) {
 	if isRunning && !session.Exhausted() {
 		<div class="session-summary">
 			if session.EnforcesTime() && session.TimeSecs > 0 {
 				<div class="session-metric">
 					<span class="session-label">{ api.Translate("label", "Time Left") }</span>
-					<span id="session-time" class="session-value" data-value={ fmt.Sprintf("%d", session.TimeSecs) } data-paused={ fmt.Sprintf("%t", session.IsPaused) }>
-						{ sdkutils.FormatTimeSecs(session.TimeSecs) }
-					</span>
+					@api.UI().LiveSession(clnt).RemainingTimeSecsWithOpts(sdkapi.LiveSessionOpts{Class: "session-value"})
 				</div>
 			}
 			if session.EnforcesData() && session.DataMb > 0 {
 				<div class="session-metric">
 					<span class="session-label">{ api.Translate("label", "Remaining Data") }</span>
-					<span class="session-value">{ sdkutils.FormatByteData(session.DataMb) }</span>
+					@api.UI().LiveSession(clnt).RemainingDataMbWithOpts(sdkapi.LiveSessionOpts{Class: "session-value"})
 				</div>
 			}
 		</div>

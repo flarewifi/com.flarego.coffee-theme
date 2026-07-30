@@ -57,6 +57,7 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 			indexData.DeviceIP = clnt.IpAddr()
 
 			indexData.IsSessionRunning = clnt.Session().IsConnected()
+			indexData.Client = clnt
 			indexData.Session = clnt.Session().SessionData()
 
 			return sdkapi.ViewPage{PageContent: portal.PortalIndexPage(api, indexData)}
