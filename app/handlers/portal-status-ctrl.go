@@ -40,7 +40,7 @@ func PortalSessionInfoCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 			session = clnt.Session().SessionData()
 		}
 
-		portal.SessionInfo(api, session, isRunning).Render(r.Context(), w)
+		portal.SessionInfo(api, clnt, session, isRunning).Render(r.Context(), w)
 	}
 }
 
