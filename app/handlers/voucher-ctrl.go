@@ -76,6 +76,6 @@ func PortalVoucherCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 		}
 
 		res.FlashMsg(w, r, api.Translate("success", "Voucher <% .code %> applied — enjoy your coffee & WiFi!", "code", code), sdkapi.FlashMsgSuccess)
-		res.RedirectToPortal(w, r)
+		res.RedirectSuccess(w, r, "https://flarewifi.com/captive-landing")
 	}
 }
