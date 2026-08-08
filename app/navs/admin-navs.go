@@ -4,19 +4,14 @@ import (
 	"net/http"
 
 	sdkapi "sdk/api"
-
-	"com.flarego.coffee-theme/app/settings"
 )
 
 // SetAdminNavs registers the "Coffee Theme" settings entry under the admin
-// Themes category. The item only appears while this plugin is the active portal
-// theme, so its settings are not offered when the theme isn't in use.
+// Themes category. Always shown, regardless of whether this plugin is the
+// currently active portal theme -- an operator can configure a theme's
+// settings ahead of switching to it.
 func SetAdminNavs(api sdkapi.IPluginApi) {
 	api.Http().Navs().AdminNavsFactory(func(r *http.Request) []sdkapi.AdminNavItemOpt {
-		if !settings.IsActivePortalTheme(api) {
-			return []sdkapi.AdminNavItemOpt{}
-		}
-
 		return []sdkapi.AdminNavItemOpt{
 			{
 				Category:  sdkapi.NavCategoryThemes,

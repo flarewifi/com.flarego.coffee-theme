@@ -33,16 +33,12 @@ var allowedImageExts = map[string]bool{
 // admin theme, previewing the current logo, banner, and welcome text.
 func ShowSettingsCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if !guardActive(api, w, r) {
-			return
-		}
-
 		cfg := settings.Get(api)
 		data := adminviews.CoffeeSettingsData{
-			BannerText:    cfg.BannerText,
-			LogoURL:       settings.LogoURL(api, cfg),
-			BannerURL:     settings.BannerURL(api, cfg),
-			HasCustomLogo: cfg.LogoFile != "",
+			BannerText:      cfg.BannerText,
+			LogoURL:         settings.LogoURL(api, cfg),
+			BannerURL:       settings.BannerURL(api, cfg),
+			HasCustomLogo:   cfg.LogoFile != "",
 			HasCustomBanner: cfg.BannerFile != "",
 		}
 
@@ -56,10 +52,6 @@ func ShowSettingsCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 // SaveSettingsCtrl persists the welcome text and any uploaded/removed images.
 func SaveSettingsCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if !guardActive(api, w, r) {
-			return
-		}
-
 		res := api.Http().Response()
 
 		// 8 MiB in-memory threshold; larger parts spill to temp files. The
@@ -104,21 +96,6 @@ func SaveSettingsCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 // =============================================================================
 // HELPER FUNCTIONS (internal)
 // =============================================================================
-
-// guardActive blocks the settings page/route unless this plugin is the active
-// captive-portal theme, so the settings are only reachable while the theme is
-// selected (even by direct URL, not just via the hidden nav item). Returns true
-// when the request may proceed.
-func guardActive(api sdkapi.IPluginApi, w http.ResponseWriter, r *http.Request) bool {
-	if settings.IsActivePortalTheme(api) {
-		return true
-	}
-	api.Http().Response().FlashMsg(w, r,
-		api.Translate("info", "Select the Coffee Shop theme as your captive portal theme to configure it"),
-		sdkapi.FlashMsgInfo)
-	http.Redirect(w, r, "/admin", http.StatusSeeOther)
-	return false
-}
 
 // resolveImageField applies one image field's form input to the stored config
 // and returns the resulting stored filename ("" == use bundled default):
