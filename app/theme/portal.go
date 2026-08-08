@@ -56,7 +56,12 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 			indexData.DeviceMac = clnt.MacAddr()
 			indexData.DeviceIP = clnt.IpAddr()
 
-			indexData.IsSessionRunning = clnt.Session().IsConnected()
+			// IsConnectedCached, not IsConnected: the latter is a real
+			// firewall call that must not sit on the render path.
+			// IsConnectedCached reads the already-loaded, persisted
+			// client_devices.status column instead -- see its doc comment on
+			// sdkapi.IClientSession.
+			indexData.IsSessionRunning = clnt.Session().IsConnectedCached()
 			indexData.Client = clnt
 			indexData.Session = clnt.Session().SessionData()
 

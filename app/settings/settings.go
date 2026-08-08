@@ -36,14 +36,6 @@ type Settings struct {
 	BannerFile string `json:"banner_file"`
 }
 
-// IsActivePortalTheme reports whether this plugin is the currently selected
-// captive-portal theme. The theme's settings (nav item + settings page) are
-// only offered while this is true.
-func IsActivePortalTheme(api sdkapi.IPluginApi) bool {
-	active := api.Themes().GetPortalTheme()
-	return active != nil && active.Info().Package == api.Info().Package
-}
-
 // Get returns the saved settings, or a zero-value Settings (all defaults) when
 // nothing has been saved yet or the stored blob is unreadable.
 func Get(api sdkapi.IPluginApi) Settings {
