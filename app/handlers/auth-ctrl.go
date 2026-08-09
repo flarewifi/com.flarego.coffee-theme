@@ -40,9 +40,9 @@ func AdminAuthenticateCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 
-		acct, err := api.Http().Auth().Authenticate(username, password)
+		acct, err := api.Http().Auth().AuthenticateAdminLogin(r, username, password)
 		if err != nil {
-			api.Http().Response().FlashMsg(w, r, api.Translate("error", "Invalid credentials"), sdkapi.FlashMsgError)
+			api.Http().Response().FlashMsg(w, r, err.Error(), sdkapi.FlashMsgError)
 			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
