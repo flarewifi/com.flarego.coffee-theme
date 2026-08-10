@@ -176,8 +176,8 @@ templ PortalLoginPage(api sdkapi.IPluginApi, csrfHTML string, data sdkapi.LoginP
 				<input id="password" name="password" type="password" class="form-control" required/>
 			</div>
 			<button type="submit" class="btn btn-coffee w-100">{ api.Translate("label", "Sign In") }</button>
-			if data.ForgotPasswordUrl != "" {
-				<a href={ templ.SafeURL(data.ForgotPasswordUrl) } class="forgot-password">{ api.Translate("label", "Forgot Password?") }</a>
+			for _, link := range data.LoginLinks {
+				<a href={ templ.SafeURL(link.Href) } class="forgot-password" { link.ExtraAttrs... }>{ link.Text }</a>
 			}
 		</form>
 	</div>

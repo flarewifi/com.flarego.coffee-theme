@@ -31,7 +31,6 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 		},
 		LoginPageFactory: func(w http.ResponseWriter, r *http.Request, data sdkapi.LoginPageData) sdkapi.ViewPage {
 			csrfHTML := api.Http().Helpers().CsrfHtmlTag(r)
-			data.ForgotPasswordUrl = api.Http().Helpers().UrlForPkgRoute("com.flarego.core", "auth:send-otp")
 			return sdkapi.ViewPage{
 				PageContent: portal.PortalLoginPage(api, csrfHTML, data),
 			}
