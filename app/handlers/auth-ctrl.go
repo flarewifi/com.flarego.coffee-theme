@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"html"
 	"net/http"
 
 	sdkapi "sdk/api"
@@ -42,7 +43,11 @@ func AdminAuthenticateCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 
 		acct, err := api.Http().Auth().AuthenticateAdminLogin(r, username, password)
 		if err != nil {
-			api.Http().Response().FlashMsg(w, r, err.Error(), sdkapi.FlashMsgError)
+			// html.EscapeString: this can be an EventAuthBeforeLogin
+			// subscriber's veto message built from request-derived data --
+			// see core/internal/web/controllers/auth-ctrl.go's identical
+			// fix for why the raw text must never reach the flash cookie.
+			api.Http().Response().FlashMsg(w, r, html.EscapeString(err.Error()), sdkapi.FlashMsgError)
 			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
