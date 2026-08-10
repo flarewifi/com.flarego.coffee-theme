@@ -19,9 +19,8 @@ func AdminLoginPageCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 			return
 		}
 		csrfHTML := api.Http().Helpers().CsrfHtmlTag(r)
-		forgotUrl := api.Http().Helpers().UrlForPkgRoute("com.flarego.core", "auth:send-otp")
 		api.Http().Response().PortalView(w, r, sdkapi.ViewPage{
-			PageContent: portal.PortalLoginPage(api, csrfHTML, sdkapi.LoginPageData{ForgotPasswordUrl: forgotUrl}),
+			PageContent: portal.PortalLoginPage(api, csrfHTML, sdkapi.LoginPageData{LoginLinks: api.Http().Navs().GetLoginLinks(r)}),
 		})
 	}
 }
