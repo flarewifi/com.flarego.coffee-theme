@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"html"
 	"net/http"
 
 	sdkapi "sdk/api"
@@ -43,11 +42,12 @@ func AdminAuthenticateCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 
 		acct, err := api.Http().Auth().AuthenticateAdminLogin(r, username, password)
 		if err != nil {
-			// html.EscapeString: this can be an EventAuthBeforeLogin
-			// subscriber's veto message built from request-derived data --
-			// see core/internal/web/controllers/auth-ctrl.go's identical
-			// fix for why the raw text must never reach the flash cookie.
-			api.Http().Response().FlashMsg(w, r, html.EscapeString(err.Error()), sdkapi.FlashMsgError)
+			// Do NOT html.EscapeString here -- err.Error() renders through
+			// templ's own auto-escaping on the login page; pre-escaping
+			// here would double-escape it. See
+			// core/internal/web/controllers/auth-ctrl.go's identical fix
+			// for the full reasoning.
+			api.Http().Response().FlashMsg(w, r, err.Error(), sdkapi.FlashMsgError)
 			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
