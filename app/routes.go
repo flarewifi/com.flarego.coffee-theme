@@ -8,14 +8,22 @@ import (
 
 func SetupRoutes(api sdkapi.IPluginApi) {
 	adminR := api.Http().Router().AdminRouter(nil)
-	httpsR := api.Http().Router().HttpRouter(&sdkapi.HttpRouterOpts{HttpsOnly: true})
 	portalR := api.Http().Router().HttpRouter(nil)
 
-	// Admin login is served over HTTPS only via the plugin's own auth:login route.
-	// GET re-renders the form (lands a 302-downgraded login POST instead of 405);
-	// POST authenticates.
-	httpsR.Get("/login", handlers.AdminLoginPageCtrl(api)).Name("auth:login-page")
-	httpsR.Post("/login", handlers.AdminAuthenticateCtrl(api)).Name("auth:login")
+	// Admin login is served on the plugin's plain router, not HttpsOnly:true --
+	// RootRouter is shared by both the plain-HTTP and HTTPS listeners (see
+	// middlewares.RequireHTTPS's own comment), so this already reaches HTTPS
+	// too whenever the page that rendered the form was itself served over
+	// HTTPS. Whether the login page/form is forced onto HTTPS at all is
+	// decided once, globally, by middlewares.ForceHTTPS
+	// (AppConfig.ForceAdminHttps) -- this route must not impose a second,
+	// unconditional HTTPS requirement on top of that, or turning
+	// ForceAdminHttps off wouldn't actually let an operator sign in over
+	// plain HTTP.
+	// GET re-renders the login form (e.g. if this URL is ever visited
+	// directly); POST authenticates.
+	portalR.Get("/login", handlers.AdminLoginPageCtrl(api)).Name("auth:login-page")
+	portalR.Post("/login", handlers.AdminAuthenticateCtrl(api)).Name("auth:login")
 
 	// Coffee-theme settings (brand logo, banner image, welcome text). Rendered
 	// inside whichever admin theme is active.

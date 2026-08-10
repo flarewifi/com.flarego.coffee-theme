@@ -9,9 +9,11 @@ import (
 )
 
 // AdminLoginPageCtrl re-renders the login page. It backs the GET on the
-// HTTPS-only /login route so a login POST that gets bounced from HTTP to HTTPS
-// (302, which downgrades the method to GET) lands on the form again instead of
-// a 405. Already-authenticated admins are sent straight to the dashboard.
+// plugin's own plain /login route (works over both HTTP and HTTPS -- see
+// routes.go's own comment) -- there for direct navigation to this URL (e.g.
+// a stale bookmark); a normal login flow only ever POSTs here, with no GET
+// round-trip in between. Already-authenticated admins are sent straight to
+// the dashboard.
 func AdminLoginPageCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if _, err := api.Http().Auth().IsAuthenticated(r); err == nil {
@@ -26,8 +28,11 @@ func AdminLoginPageCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 }
 
 // AdminAuthenticateCtrl authenticates an admin sign-in submitted from the
-// captive portal login page. It is registered on the HTTPS-only router so
-// credentials are never posted over plain HTTP.
+// captive portal login page. It is registered on the plugin's plain router,
+// not HTTPS-restricted, so it works whether or not AppConfig.ForceAdminHttps
+// is on -- the admin dashboard is only forced onto HTTPS by
+// middlewares.ForceHTTPS when that setting is enabled, and this route must
+// not impose a second, unconditional HTTPS requirement of its own.
 func AdminAuthenticateCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
