@@ -1,5 +1,3 @@
-# Coffee Shop Theme
-
 ![Coffee Shop Theme captive portal](resources/assets/public/images/preview.png)
 
 Give your hotspot the warm, inviting feel of your café. This captive-portal theme
