@@ -64,8 +64,8 @@ templ PortalIndexPage(api sdkapi.IPluginApi, data PortalIndexData) {
 		<!-- Session summary -->
 		<div
 			hx-get={ api.Http().Helpers().UrlForRoute("portal:coffee-theme:session-info") }
-			hx-trigger={ fmt.Sprintf("sse:%s, sse:%s",
-				sdkapi.PortalEventSessionConnected, sdkapi.PortalEventSessionDisconnected) }
+			hx-trigger={ fmt.Sprintf("sse:%s, sse:%s, sse:%s",
+				sdkapi.PortalEventSessionConnected, sdkapi.PortalEventSessionDisconnected, sdkapi.PortalEventSessionActivated) }
 			hx-swap="innerHTML"
 		>
 			@SessionInfo(api, data.Client, data.Session, data.Summary, data.IsSessionRunning)

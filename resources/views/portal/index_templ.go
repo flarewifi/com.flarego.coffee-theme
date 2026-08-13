@@ -265,10 +265,10 @@ func PortalIndexPage(api sdkapi.IPluginApi, data PortalIndexData) templ.Componen
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var14 string
-		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("sse:%s, sse:%s",
-			sdkapi.PortalEventSessionConnected, sdkapi.PortalEventSessionDisconnected))
+		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(fmt.Sprintf("sse:%s, sse:%s, sse:%s",
+			sdkapi.PortalEventSessionConnected, sdkapi.PortalEventSessionDisconnected, sdkapi.PortalEventSessionActivated))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `resources/views/portal/index.templ`, Line: 68, Col: 78}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `resources/views/portal/index.templ`, Line: 68, Col: 114}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
 		if templ_7745c5c3_Err != nil {
