@@ -64,6 +64,28 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 			indexData.Client = clnt
 			indexData.Session = clnt.Session().SessionData()
 
+			if indexData.IsSessionRunning {
+				// Never fail the whole page over a reporting query -- fall back to
+				// the active session's own totals (what SessionSummary would report
+				// with zero queued behind it) on error.
+				summary, err := clnt.SessionSummary(r.Context())
+				if err != nil {
+					session := indexData.Session
+					summary = sdkapi.SessionSummary{
+						IsConnected: indexData.IsSessionRunning,
+						IsPaused:    session.IsPaused,
+						UpdatedAt:   session.UpdatedAt,
+					}
+					if session.EnforcesTime() {
+						summary.TimeSecs = session.TimeSecs
+					}
+					if session.EnforcesData() {
+						summary.DataMb = session.DataMb
+					}
+				}
+				indexData.Summary = summary
+			}
+
 			return sdkapi.ViewPage{PageContent: portal.PortalIndexPage(api, indexData)}
 		},
 	})

@@ -2,8 +2,10 @@ package portal
 
 import (
 	"fmt"
+	"strconv"
 
 	sdkapi "sdk/api"
+	sdkutils "github.com/flarewifi/sdk-utils/v2"
 )
 
 type PortalIndexData struct {
@@ -13,6 +15,7 @@ type PortalIndexData struct {
 	IsSessionRunning bool
 	IsOnline         bool
 	Session          sdkapi.SessionData
+	Summary          sdkapi.SessionSummary
 	Client           sdkapi.IClientDevice
 
 	// Admin-editable branding.
@@ -65,7 +68,7 @@ templ PortalIndexPage(api sdkapi.IPluginApi, data PortalIndexData) {
 				sdkapi.PortalEventSessionConnected, sdkapi.PortalEventSessionDisconnected) }
 			hx-swap="innerHTML"
 		>
-			@SessionInfo(api, data.Client, data.Session, data.IsSessionRunning)
+			@SessionInfo(api, data.Client, data.Session, data.Summary, data.IsSessionRunning)
 		</div>
 		<!-- Action buttons — default-size Bootstrap buttons stacked vertically
 		     (d-grid). The primary (insert coin) is filled coffee-brown; the rest
@@ -132,23 +135,76 @@ templ StatusBar(api sdkapi.IPluginApi, isConnected bool) {
 	}
 }
 
-templ SessionInfo(api sdkapi.IPluginApi, clnt sdkapi.IClientDevice, session sdkapi.SessionData, isRunning bool) {
+// queuedExtraTimeSecs is the portion of SessionSummary.TimeSecs contributed by
+// sessions still queued behind the active one -- what theme.js's setRenderer
+// adds on top of the active session's own ticking value, via the span's
+// data-extra-time-secs attribute, so the figure on screen is the device's
+// TRUE remaining total, not just the active session's share of it. Clamped
+// at 0: session and summary come from two separate SessionData reads a beat
+// apart, so a live, still-decrementing active session can occasionally make
+// the difference dip fractionally negative -- that must never subtract from
+// what's shown.
+func queuedExtraTimeSecs(session sdkapi.SessionData, summary sdkapi.SessionSummary) int {
+	if extra := summary.TimeSecs - session.TimeSecs; extra > 0 {
+		return extra
+	}
+	return 0
+}
+
+// queuedExtraDataMb is queuedExtraTimeSecs for the data dimension.
+func queuedExtraDataMb(session sdkapi.SessionData, summary sdkapi.SessionSummary) float64 {
+	if extra := summary.DataMb - session.DataMb; extra > 0 {
+		return extra
+	}
+	return 0
+}
+
+templ SessionInfo(api sdkapi.IPluginApi, clnt sdkapi.IClientDevice, session sdkapi.SessionData, summary sdkapi.SessionSummary, isRunning bool) {
 	if isRunning && !session.Exhausted() {
 		<div class="session-summary">
-			if session.EnforcesTime() && session.TimeSecs > 0 {
+			if summary.TimeSecs > 0 {
 				<div class="session-metric">
 					<span class="session-label">{ api.Translate("label", "Time Left") }</span>
-					@api.UI().LiveSession(clnt).RemainingTimeSecsWithOpts(sdkapi.LiveSessionOpts{Class: "session-value"})
+					if session.EnforcesTime() {
+						// The live ticker only ever counts down the ACTIVE session's own
+						// value -- data-extra-time-secs is what theme.js's setRenderer
+						// adds back on top each render so the figure on screen stays the
+						// device's TOTAL, queued sessions included.
+						@api.UI().LiveSession(clnt).RemainingTimeSecsWithOpts(sdkapi.LiveSessionOpts{
+							Class:   "session-value",
+							Attrs:   templ.Attributes{"data-extra-time-secs": strconv.Itoa(queuedExtraTimeSecs(session, summary))},
+							Content: PlainText(sdkutils.FormatTimeSecs(summary.TimeSecs)),
+						})
+					} else {
+						<span class="session-value">{ sdkutils.FormatTimeSecs(summary.TimeSecs) }</span>
+					}
 				</div>
 			}
-			if session.EnforcesData() && session.DataMb > 0 {
+			if summary.DataMb > 0 {
 				<div class="session-metric">
 					<span class="session-label">{ api.Translate("label", "Remaining Data") }</span>
-					@api.UI().LiveSession(clnt).RemainingDataMbWithOpts(sdkapi.LiveSessionOpts{Class: "session-value"})
+					if session.EnforcesData() {
+						// See the time metric above -- same data-extra-*-mb mechanism.
+						@api.UI().LiveSession(clnt).RemainingDataMbWithOpts(sdkapi.LiveSessionOpts{
+							Class:   "session-value",
+							Attrs:   templ.Attributes{"data-extra-data-mb": strconv.FormatFloat(queuedExtraDataMb(session, summary), 'f', -1, 64)},
+							Content: PlainText(sdkutils.FormatByteData(summary.DataMb)),
+						})
+					} else {
+						<span class="session-value">{ sdkutils.FormatByteData(summary.DataMb) }</span>
+					}
 				</div>
 			}
 		</div>
 	}
+}
+
+// PlainText renders a formatted figure with no extra markup -- this theme has
+// no styled shape of its own for the session value, so this is just
+// LiveSessionOpts.Content's minimal text-only component, escaped like any
+// other templ interpolation.
+templ PlainText(s string) {
+	{ s }
 }
 
 templ InternetStatus(api sdkapi.IPluginApi, isOnline bool) {
