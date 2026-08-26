@@ -5,7 +5,7 @@
   "version": "1.0.25",
   "opkg_packages": null,
   "apk_packages": null,
-  "sdk": "1.3.205",
+  "sdk": "1.3.206",
   "preinstall": "",
   "postinstall": "",
   "preuninstall": "",
