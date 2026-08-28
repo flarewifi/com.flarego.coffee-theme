@@ -1,7 +1,10 @@
 package admin
 
-import sdkapi "sdk/api"
+import (
+	sdkapi "sdk/api"
 
+
+)
 type CoffeeSettingsData struct {
 	BannerText      string
 	LogoURL         string
@@ -17,7 +20,7 @@ type CoffeeSettingsData struct {
 templ CoffeeSettingsView(api sdkapi.IPluginApi, data CoffeeSettingsData) {
 	<div class="coffee-settings">
 		<div class="d-flex align-items-center gap-2 mb-1">
-			<i class="bi bi-cup-hot fs-4"></i>
+			@templ.Raw(api.UI().Icon("cup-hot", "fs-4"))
 			<h1 class="h4 mb-0">{ api.Translate("label", "Coffee Theme") }</h1>
 		</div>
 		<p class="text-muted mb-4">{ api.Translate("label", "Customize the coffee-shop captive portal shown to your customers.") }</p>
@@ -68,7 +71,8 @@ templ CoffeeSettingsView(api sdkapi.IPluginApi, data CoffeeSettingsData) {
 			</div>
 			<div class="mt-4">
 				<button type="submit" class="btn btn-primary">
-					<i class="bi bi-save me-1"></i>{ api.Translate("label", "Save Changes") }
+@templ.Raw(api.UI().Icon("save", "me-1"))
+					{ api.Translate("label", "Save Changes") }
 				</button>
 			</div>
 		</form>

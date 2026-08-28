@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	sdkapi "sdk/api"
+
 )
 
 // SetAdminNavs registers the "Coffee Theme" settings entry under the admin
@@ -17,7 +18,7 @@ func SetAdminNavs(api sdkapi.IPluginApi) {
 				Category:  sdkapi.NavCategoryThemes,
 				Label:     api.Translate("label", "Coffee Theme"),
 				RouteName: "admin:coffee-theme:settings",
-				Icon:      "<i class='bi bi-cup-hot'></i>",
+				Icon:      api.UI().Icon("cup-hot", ""),
 				Order:     5000,
 				Keywords: []string{
 					api.Translate("label", "coffee"),
