@@ -22,10 +22,12 @@ window.$flare.ui.liveSession.setRenderer(function (el, text, value, kind) {
 });
 
 // Ensure Enter submits the admin login form even inside the portal layout.
-jQuery(document).on('keydown', '#login-form input', function (e) {
-  if (e.which !== 13 && e.key !== 'Enter') return;
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Enter' && e.keyCode !== 13) return;
+  var input = e.target && e.target.closest ? e.target.closest('#login-form input') : null;
+  if (!input) return;
   e.preventDefault();
-  var form = this.form;
+  var form = input.form;
   if (!form) return;
   if (typeof form.requestSubmit === 'function') {
     form.requestSubmit();
