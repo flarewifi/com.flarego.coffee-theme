@@ -125,13 +125,20 @@ func resolveImageField(api sdkapi.IPluginApi, r *http.Request, fileField, remove
 		return current, errUnsupportedImage
 	}
 
-	newName := storeBase + ext
-	if _, err := api.Themes().Storage().WriteReader(newName, file); err != nil {
+	// Content-addressed, so the stored name changes exactly when the image
+	// does. Variant images are served with a long cache lifetime, and a fixed
+	// name would leave every browser that already loaded the portal showing the
+	// previous picture until that cache expired.
+	newName, err := api.Themes().Storage().WriteHashed(storeBase+ext, file)
+	if err != nil {
 		return current, err
 	}
 
-	// A previous upload with a different extension (e.g. logo.png -> logo.svg)
-	// would otherwise be orphaned in storage.
+	// The stored name is content-addressed, so ANY different image lands under a
+	// different name and the previous one would otherwise be orphaned in the
+	// variant -- where it would go on counting against the variant tree's size
+	// budget forever. Re-uploading the identical image yields the identical
+	// name, so that case correctly deletes nothing.
 	if current != "" && current != newName {
 		if err := api.Themes().Storage().Delete(current); err != nil {
 			api.Logger().Error("coffee-theme: failed to delete stale " + storeBase + ": " + err.Error())
