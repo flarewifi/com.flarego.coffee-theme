@@ -106,7 +106,7 @@ func SaveSettingsCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 func resolveImageField(api sdkapi.IPluginApi, r *http.Request, fileField, removeField, storeBase, current string) (string, error) {
 	if r.FormValue(removeField) == "on" {
 		if current != "" {
-			if err := api.Storage().Delete(current); err != nil {
+			if err := api.Themes().Storage().Delete(current); err != nil {
 				api.Logger().Error("coffee-theme: failed to delete " + storeBase + ": " + err.Error())
 			}
 		}
@@ -126,14 +126,14 @@ func resolveImageField(api sdkapi.IPluginApi, r *http.Request, fileField, remove
 	}
 
 	newName := storeBase + ext
-	if _, err := api.Storage().WriteReader(newName, file); err != nil {
+	if _, err := api.Themes().Storage().WriteReader(newName, file); err != nil {
 		return current, err
 	}
 
 	// A previous upload with a different extension (e.g. logo.png -> logo.svg)
 	// would otherwise be orphaned in storage.
 	if current != "" && current != newName {
-		if err := api.Storage().Delete(current); err != nil {
+		if err := api.Themes().Storage().Delete(current); err != nil {
 			api.Logger().Error("coffee-theme: failed to delete stale " + storeBase + ": " + err.Error())
 		}
 	}

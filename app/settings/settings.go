@@ -2,11 +2,14 @@
 // admin-editable portal content: the welcome/banner text, the brand logo, and
 // the banner image.
 //
-// Text is stored as a JSON blob in the plugin config store
-// (api.Config().Plugin()); uploaded images are stored as files in the plugin
-// storage area (api.Storage()). The config only records the stored filename of
-// each image (empty == fall back to the bundled default), so mutable uploads
-// and immutable bundled defaults never get confused.
+// Text is a JSON blob in the theme variant store (api.Themes().Config());
+// uploaded images are files in the matching variant file store
+// (api.Themes().Storage()). Reading and writing through those, rather than the
+// plugin-wide stores, is what gives each saved variant its own copy of both.
+//
+// The config records only each image's stored filename (empty == fall back to
+// the bundled default), so mutable uploads and immutable bundled defaults never
+// get confused.
 package settings
 
 import (
@@ -41,7 +44,7 @@ type Settings struct {
 func Get(api sdkapi.IPluginApi) Settings {
 	var s Settings
 
-	b, err := api.Config().Plugin().Read(configKey)
+	b, err := api.Themes().Config().Read(configKey)
 	if err != nil {
 		return s
 	}
@@ -60,14 +63,14 @@ func Save(api sdkapi.IPluginApi, s *Settings) error {
 		return err
 	}
 
-	return api.Config().Plugin().Write(configKey, b)
+	return api.Themes().Config().Write(configKey, b)
 }
 
 // LogoURL resolves the brand-logo URL: the uploaded file when present,
 // otherwise the bundled default.
 func LogoURL(api sdkapi.IPluginApi, s Settings) string {
-	if s.LogoFile != "" && api.Storage().Exists(s.LogoFile) {
-		return api.Storage().UrlFor(s.LogoFile)
+	if s.LogoFile != "" && api.Themes().Storage().Exists(s.LogoFile) {
+		return api.Themes().Storage().UrlFor(s.LogoFile)
 	}
 	return api.Http().Helpers().PublicPath(defaultLogo)
 }
@@ -75,8 +78,8 @@ func LogoURL(api sdkapi.IPluginApi, s Settings) string {
 // BannerURL resolves the banner-image URL: the uploaded file when present,
 // otherwise the bundled default.
 func BannerURL(api sdkapi.IPluginApi, s Settings) string {
-	if s.BannerFile != "" && api.Storage().Exists(s.BannerFile) {
-		return api.Storage().UrlFor(s.BannerFile)
+	if s.BannerFile != "" && api.Themes().Storage().Exists(s.BannerFile) {
+		return api.Themes().Storage().UrlFor(s.BannerFile)
 	}
 	return api.Http().Helpers().PublicPath(defaultBanner)
 }
@@ -88,4 +91,65 @@ func BannerText(api sdkapi.IPluginApi, s Settings) string {
 		return s.BannerText
 	}
 	return api.Translate("label", "Grab a cup, sit back, and enjoy free WiFi")
+}
+
+// MigrateLegacySettings copies this theme's pre-variant settings -- the config
+// blob and the images it names -- from the plugin-wide stores into the
+// currently-applied variant. Core no longer does this for us: only the theme
+// itself knows which of its config keys describe the portal look.
+//
+// One-time and best-effort: every failure is logged and skipped, because this
+// runs during plugin registration and must never abort startup. The legacy
+// files are left in place as a safety net.
+func MigrateLegacySettings(api sdkapi.IPluginApi) {
+	if _, err := api.Themes().Config().Read(configKey); err == nil {
+		// Already migrated -- the key's presence in the variant store IS the marker.
+		return
+	}
+
+	b, err := api.Config().Plugin().Read(configKey)
+	if err != nil {
+		// Nothing was ever saved pre-variant, so there is nothing to migrate.
+		return
+	}
+
+	var s Settings
+	if err := json.Unmarshal(b, &s); err != nil {
+		api.Logger().Error("coffee-theme: legacy settings are unreadable, skipping migration: " + err.Error())
+		return
+	}
+
+	for _, name := range []string{s.LogoFile, s.BannerFile} {
+		copyLegacyImage(api, name)
+	}
+
+	// Written LAST, deliberately: this key IS the already-migrated marker, so
+	// writing it before the images would make a crash in between lose them
+	// permanently.
+	if err := api.Themes().Config().Write(configKey, b); err != nil {
+		api.Logger().Error("coffee-theme: failed to migrate settings into the theme variant: " + err.Error())
+	}
+}
+
+// =============================================================================
+// HELPER FUNCTIONS (internal)
+// =============================================================================
+
+// copyLegacyImage copies one stored upload from plugin storage into the current
+// variant's storage. A missing or unreadable file is skipped rather than fatal:
+// the URL resolvers already fall back to the bundled default.
+func copyLegacyImage(api sdkapi.IPluginApi, name string) {
+	if name == "" || !api.Storage().Exists(name) {
+		return
+	}
+
+	data, err := api.Storage().Read(name)
+	if err != nil {
+		api.Logger().Error("coffee-theme: failed to read legacy image " + name + ": " + err.Error())
+		return
+	}
+
+	if _, err := api.Themes().Storage().Write(name, data); err != nil {
+		api.Logger().Error("coffee-theme: failed to migrate image " + name + ": " + err.Error())
+	}
 }

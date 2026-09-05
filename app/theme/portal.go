@@ -89,4 +89,8 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 			return sdkapi.ViewPage{PageContent: portal.PortalIndexPage(api, indexData)}
 		},
 	})
+
+	// After NewPortalTheme, never before: the variant store only resolves once
+	// this plugin has a registered portal theme to scope it to.
+	settings.MigrateLegacySettings(api)
 }
