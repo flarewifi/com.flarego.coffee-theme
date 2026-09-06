@@ -6,6 +6,13 @@ import (
 
 )
 type CoffeeSettingsData struct {
+	// VariantName is the saved look being edited, shown so the operator can
+	// tell one otherwise-identical settings page from another.
+	VariantName string
+	// SaveURL is this form's own action, carrying the variant being edited.
+	// Built by the controller rather than resolved here, because a route name
+	// alone cannot carry the ?variant= the save has to round-trip.
+	SaveURL string
 	BannerText      string
 	LogoURL         string
 	BannerURL       string
@@ -23,11 +30,18 @@ templ CoffeeSettingsView(api sdkapi.IPluginApi, data CoffeeSettingsData) {
 			@templ.Raw(api.UI().Icon("cup-hot", "fs-4"))
 			<h1 class="h4 mb-0">{ api.Translate("label", "Coffee Theme") }</h1>
 		</div>
-		<p class="text-muted mb-4">{ api.Translate("label", "Customize the coffee-shop captive portal shown to your customers.") }</p>
+		<p class="text-muted mb-2">{ api.Translate("label", "Customize the coffee-shop captive portal shown to your customers.") }</p>
+		if data.VariantName != "" {
+			<p class="text-body-secondary small mb-4">
+				@templ.Raw(api.UI().Icon("layers", "me-1"))
+				{ api.Translate("label", "Editing variant") }:
+				<span class="fw-semibold">{ data.VariantName }</span>
+			</p>
+		}
 		<form
 			method="POST"
 			enctype="multipart/form-data"
-			action={ templ.SafeURL(api.Http().Helpers().UrlForRoute("admin:coffee-theme:settings:save")) }
+			action={ templ.SafeURL(data.SaveURL) }
 		>
 			<div class="card mb-3">
 				<div class="card-body">

@@ -6,17 +6,18 @@
     "Invalid voucher code": "Código de vale no válido",
     "Logo must be a PNG, JPG, WEBP, GIF, or SVG image": "El logotipo debe ser una imagen PNG, JPG, WEBP, GIF o SVG",
     "Please enter a voucher code": "Ingrese un código de vale",
+    "That variant no longer exists.": "Esa variante ya no existe.",
     "This voucher has already been used": "Este vale ya ha sido utilizado",
     "Unable to apply voucher. Please try again": "No se pudo aplicar el vale. Inténtelo de nuevo",
     "Unable to identify your device": "No se pudo identificar su dispositivo",
+    "Unable to save the image": "No se pudo guardar la imagen",
     "Unable to save theme settings": "No se pudo guardar la configuración del tema",
     "Voucher applied, but connection failed. Please try again": "Vale aplicado, pero la conexión falló. Inténtelo de nuevo",
     "Voucher code not found": "Código de vale no encontrado"
   },
   "info": {
     "Connected via voucher": "Conectado mediante vale",
-    "Logged in successfully": "Sesión iniciada correctamente",
-    "Select the Coffee Shop theme as your captive portal theme to configure it": "Seleccione el tema Cafetería como tema de su portal cautivo para configurarlo"
+    "Logged in successfully": "Sesión iniciada correctamente"
   },
   "label": {
     "Admin Sign In": "Inicio de sesión de administrador",
@@ -29,6 +30,7 @@
     "Connected": "Conectado",
     "Customize the coffee-shop captive portal shown to your customers.": "Personalice el portal cautivo de estilo cafetería que se muestra a sus clientes.",
     "Displayed at the top of the portal. PNG, JPG, WEBP, GIF, or SVG.": "Se muestra en la parte superior del portal. PNG, JPG, WEBP, GIF o SVG.",
+    "Editing variant": "Editando variante",
     "Enter Voucher Code": "Ingresar código de vale",
     "Grab a cup, sit back, and enjoy free WiFi": "Tome una taza, relájese y disfrute de WiFi gratis",
     "IP": "IP",
@@ -49,14 +51,8 @@
     "Username": "Nombre de usuario",
     "Welcome Text": "Texto de bienvenida",
     "WiFi Hotspot": "Punto de acceso WiFi",
-    "banner": "banner",
-    "branding": "marca",
-    "coffee": "café",
     "e.g. ABCD-1234": "p. ej. ABCD-1234",
-    "e.g. Grab a cup, sit back, and enjoy free WiFi": "p. ej. Tome una taza, relájese y disfrute de WiFi gratis",
-    "logo": "logotipo",
-    "portal": "portal",
-    "theme": "tema"
+    "e.g. Grab a cup, sit back, and enjoy free WiFi": "p. ej. Tome una taza, relájese y disfrute de WiFi gratis"
   },
   "success": {
     "Theme settings saved": "Configuración del tema guardada",

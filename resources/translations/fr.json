@@ -6,17 +6,18 @@
     "Invalid voucher code": "Code de bon invalide",
     "Logo must be a PNG, JPG, WEBP, GIF, or SVG image": "Le logo doit être une image PNG, JPG, WEBP, GIF ou SVG",
     "Please enter a voucher code": "Veuillez saisir un code de bon",
+    "That variant no longer exists.": "Cette variante n'existe plus.",
     "This voucher has already been used": "Ce bon a déjà été utilisé",
     "Unable to apply voucher. Please try again": "Impossible d'appliquer le bon. Veuillez réessayer",
     "Unable to identify your device": "Impossible d'identifier votre appareil",
+    "Unable to save the image": "Impossible d'enregistrer l'image",
     "Unable to save theme settings": "Impossible d'enregistrer les paramètres du thème",
     "Voucher applied, but connection failed. Please try again": "Bon appliqué, mais la connexion a échoué. Veuillez réessayer",
     "Voucher code not found": "Code de bon introuvable"
   },
   "info": {
     "Connected via voucher": "Connecté via un bon",
-    "Logged in successfully": "Connexion réussie",
-    "Select the Coffee Shop theme as your captive portal theme to configure it": "Sélectionnez le thème Coffee Shop comme thème de portail captif pour le configurer"
+    "Logged in successfully": "Connexion réussie"
   },
   "label": {
     "Admin Sign In": "Connexion administrateur",
@@ -29,6 +30,7 @@
     "Connected": "Connecté",
     "Customize the coffee-shop captive portal shown to your customers.": "Personnalisez le portail captif de style café présenté à vos clients.",
     "Displayed at the top of the portal. PNG, JPG, WEBP, GIF, or SVG.": "Affichée en haut du portail. PNG, JPG, WEBP, GIF ou SVG.",
+    "Editing variant": "Modification de la variante",
     "Enter Voucher Code": "Saisir le code du bon",
     "Grab a cup, sit back, and enjoy free WiFi": "Prenez une tasse, installez-vous et profitez du WiFi gratuit",
     "IP": "IP",
@@ -49,14 +51,8 @@
     "Username": "Nom d'utilisateur",
     "Welcome Text": "Texte de bienvenue",
     "WiFi Hotspot": "Point d'accès WiFi",
-    "banner": "bannière",
-    "branding": "image de marque",
-    "coffee": "café",
     "e.g. ABCD-1234": "ex. ABCD-1234",
-    "e.g. Grab a cup, sit back, and enjoy free WiFi": "ex. Prenez une tasse, installez-vous et profitez du WiFi gratuit",
-    "logo": "logo",
-    "portal": "portail",
-    "theme": "thème"
+    "e.g. Grab a cup, sit back, and enjoy free WiFi": "ex. Prenez une tasse, installez-vous et profitez du WiFi gratuit"
   },
   "success": {
     "Theme settings saved": "Paramètres du thème enregistrés",

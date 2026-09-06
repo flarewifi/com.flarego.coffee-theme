@@ -6,17 +6,18 @@
     "Invalid voucher code": "Mã voucher không hợp lệ",
     "Logo must be a PNG, JPG, WEBP, GIF, or SVG image": "Ảnh logo phải là PNG, JPG, WEBP, GIF hoặc SVG",
     "Please enter a voucher code": "Vui lòng nhập mã voucher",
+    "That variant no longer exists.": "Biến thể đó không còn tồn tại nữa.",
     "This voucher has already been used": "Voucher này đã được sử dụng",
     "Unable to apply voucher. Please try again": "Không thể áp dụng voucher. Vui lòng thử lại",
     "Unable to identify your device": "Không thể nhận diện thiết bị của bạn",
+    "Unable to save the image": "Không thể lưu hình ảnh",
     "Unable to save theme settings": "Không thể lưu cài đặt giao diện",
     "Voucher applied, but connection failed. Please try again": "Đã áp dụng voucher nhưng kết nối thất bại. Vui lòng thử lại",
     "Voucher code not found": "Không tìm thấy mã voucher"
   },
   "info": {
     "Connected via voucher": "Đã kết nối bằng voucher",
-    "Logged in successfully": "Đăng nhập thành công",
-    "Select the Coffee Shop theme as your captive portal theme to configure it": "Chọn giao diện Coffee Shop làm giao diện cổng captive portal của bạn để cấu hình"
+    "Logged in successfully": "Đăng nhập thành công"
   },
   "label": {
     "Admin Sign In": "Đăng nhập quản trị",
@@ -29,6 +30,7 @@
     "Connected": "Đã kết nối",
     "Customize the coffee-shop captive portal shown to your customers.": "Tùy chỉnh cổng captive portal phong cách quán cà phê hiển thị cho khách hàng của bạn.",
     "Displayed at the top of the portal. PNG, JPG, WEBP, GIF, or SVG.": "Hiển thị ở đầu trang cổng portal. PNG, JPG, WEBP, GIF hoặc SVG.",
+    "Editing variant": "Đang chỉnh sửa biến thể",
     "Enter Voucher Code": "Nhập mã voucher",
     "Grab a cup, sit back, and enjoy free WiFi": "Nhâm nhi một ly, thư giãn và tận hưởng WiFi miễn phí",
     "IP": "IP",
@@ -49,14 +51,8 @@
     "Username": "Tên đăng nhập",
     "Welcome Text": "Văn bản chào mừng",
     "WiFi Hotspot": "Điểm phát WiFi",
-    "banner": "banner",
-    "branding": "thương hiệu",
-    "coffee": "cà phê",
     "e.g. ABCD-1234": "vd: ABCD-1234",
-    "e.g. Grab a cup, sit back, and enjoy free WiFi": "vd: Nhâm nhi một ly, thư giãn và tận hưởng WiFi miễn phí",
-    "logo": "logo",
-    "portal": "portal",
-    "theme": "giao diện"
+    "e.g. Grab a cup, sit back, and enjoy free WiFi": "vd: Nhâm nhi một ly, thư giãn và tận hưởng WiFi miễn phí"
   },
   "success": {
     "Theme settings saved": "Đã lưu cài đặt giao diện",

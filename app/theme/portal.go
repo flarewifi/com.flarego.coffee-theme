@@ -13,10 +13,11 @@ import (
 
 func SetPortalTheme(api sdkapi.IPluginApi) {
 	api.Themes().NewPortalTheme(sdkapi.PortalThemeOpts{
-		JsFile:       "theme.js",
-		CssFile:      "theme.css",
-		CssLib:       sdkapi.CssLibBootstrap5,
-		PreviewImage: "images/preview.png",
+		JsFile:        "theme.js",
+		CssFile:       "theme.css",
+		CssLib:        sdkapi.CssLibBootstrap5,
+		PreviewImage:  "images/preview.png",
+		EditRouteName: "admin:coffee-theme:settings",
 		LayoutBuilder: func(w http.ResponseWriter, r *http.Request, c sdkapi.IThemeComponents) {
 			// The login page reuses this layout; only the portal index gets the
 			// "coffee-index" body class so its card styling never leaks onto login.
@@ -36,13 +37,14 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 			}
 		},
 		IndexPageFactory: func(w http.ResponseWriter, r *http.Request) sdkapi.ViewPage {
-			cfg := settings.Get(api)
+			v := api.Themes().GetVariant("")
+			cfg := settings.Get(v)
 
 			indexData := portal.PortalIndexData{
 				Navs:       api.Http().Navs().GetPortalItems(r),
 				IsOnline:   api.Machine().IsOnline(),
-				LogoURL:    settings.LogoURL(api, cfg),
-				BannerURL:  settings.BannerURL(api, cfg),
+				LogoURL:    settings.LogoURL(api, v, cfg),
+				BannerURL:  settings.BannerURL(api, v, cfg),
 				BannerText: settings.BannerText(api, cfg),
 			}
 
@@ -89,4 +91,8 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 			return sdkapi.ViewPage{PageContent: portal.PortalIndexPage(api, indexData)}
 		},
 	})
+
+	// After NewPortalTheme, never before: the variant store only resolves once
+	// this plugin has a registered portal theme to scope it to.
+	settings.MigrateLegacySettings(api)
 }

@@ -6,17 +6,18 @@
     "Invalid voucher code": "Ongeldige vouchercode",
     "Logo must be a PNG, JPG, WEBP, GIF, or SVG image": "Logo moet een PNG-, JPG-, WEBP-, GIF- of SVG-afbeelding zijn",
     "Please enter a voucher code": "Voer een vouchercode in",
+    "That variant no longer exists.": "Die variant bestaat niet meer.",
     "This voucher has already been used": "Deze voucher is al gebruikt",
     "Unable to apply voucher. Please try again": "Kan voucher niet toepassen. Probeer het opnieuw",
     "Unable to identify your device": "Kan uw apparaat niet identificeren",
+    "Unable to save the image": "Kan de afbeelding niet opslaan",
     "Unable to save theme settings": "Kan thema-instellingen niet opslaan",
     "Voucher applied, but connection failed. Please try again": "Voucher toegepast, maar de verbinding is mislukt. Probeer het opnieuw",
     "Voucher code not found": "Vouchercode niet gevonden"
   },
   "info": {
     "Connected via voucher": "Verbonden via voucher",
-    "Logged in successfully": "Succesvol ingelogd",
-    "Select the Coffee Shop theme as your captive portal theme to configure it": "Selecteer het Coffee Shop-thema als uw captive portal-thema om het te configureren"
+    "Logged in successfully": "Succesvol ingelogd"
   },
   "label": {
     "Admin Sign In": "Beheerder aanmelden",
@@ -29,6 +30,7 @@
     "Connected": "Verbonden",
     "Customize the coffee-shop captive portal shown to your customers.": "Pas het coffeeshop captive portal aan dat aan uw klanten wordt getoond.",
     "Displayed at the top of the portal. PNG, JPG, WEBP, GIF, or SVG.": "Wordt bovenaan de portal weergegeven. PNG, JPG, WEBP, GIF of SVG.",
+    "Editing variant": "Variant bewerken",
     "Enter Voucher Code": "Voer vouchercode in",
     "Grab a cup, sit back, and enjoy free WiFi": "Pak een kopje, leun achterover en geniet van gratis WiFi",
     "IP": "IP",
@@ -49,14 +51,8 @@
     "Username": "Gebruikersnaam",
     "Welcome Text": "Welkomsttekst",
     "WiFi Hotspot": "WiFi-hotspot",
-    "banner": "banner",
-    "branding": "huisstijl",
-    "coffee": "koffie",
     "e.g. ABCD-1234": "bijv. ABCD-1234",
-    "e.g. Grab a cup, sit back, and enjoy free WiFi": "bijv. Pak een kopje, leun achterover en geniet van gratis WiFi",
-    "logo": "logo",
-    "portal": "portal",
-    "theme": "thema"
+    "e.g. Grab a cup, sit back, and enjoy free WiFi": "bijv. Pak een kopje, leun achterover en geniet van gratis WiFi"
   },
   "success": {
     "Theme settings saved": "Thema-instellingen opgeslagen",

@@ -6,17 +6,18 @@
     "Invalid voucher code": "رمز القسيمة غير صالح",
     "Logo must be a PNG, JPG, WEBP, GIF, or SVG image": "يجب أن يكون الشعار بصيغة PNG أو JPG أو WEBP أو GIF أو SVG",
     "Please enter a voucher code": "الرجاء إدخال رمز القسيمة",
+    "That variant no longer exists.": "هذا المتغيّر لم يعد موجودًا.",
     "This voucher has already been used": "تم استخدام هذه القسيمة بالفعل",
     "Unable to apply voucher. Please try again": "تعذر تطبيق القسيمة. الرجاء المحاولة مرة أخرى",
     "Unable to identify your device": "تعذر التعرف على جهازك",
+    "Unable to save the image": "تعذر حفظ الصورة",
     "Unable to save theme settings": "تعذر حفظ إعدادات السمة",
     "Voucher applied, but connection failed. Please try again": "تم تطبيق القسيمة، ولكن فشل الاتصال. الرجاء المحاولة مرة أخرى",
     "Voucher code not found": "رمز القسيمة غير موجود"
   },
   "info": {
     "Connected via voucher": "متصل عبر القسيمة",
-    "Logged in successfully": "تم تسجيل الدخول بنجاح",
-    "Select the Coffee Shop theme as your captive portal theme to configure it": "اختر سمة المقهى كسمة للبوابة المقيدة لديك لتتمكن من تهيئتها"
+    "Logged in successfully": "تم تسجيل الدخول بنجاح"
   },
   "label": {
     "Admin Sign In": "تسجيل دخول المسؤول",
@@ -29,6 +30,7 @@
     "Connected": "متصل",
     "Customize the coffee-shop captive portal shown to your customers.": "خصّص بوابة المقهى المقيدة التي تُعرض على عملائك.",
     "Displayed at the top of the portal. PNG, JPG, WEBP, GIF, or SVG.": "تُعرض أعلى البوابة. بصيغة PNG أو JPG أو WEBP أو GIF أو SVG.",
+    "Editing variant": "تعديل المتغيّر",
     "Enter Voucher Code": "أدخل رمز القسيمة",
     "Grab a cup, sit back, and enjoy free WiFi": "اطلب كوبًا، استرخِ، واستمتع بواي فاي مجاني",
     "IP": "IP",
@@ -49,14 +51,8 @@
     "Username": "اسم المستخدم",
     "Welcome Text": "نص الترحيب",
     "WiFi Hotspot": "نقطة واي فاي",
-    "banner": "بانر",
-    "branding": "العلامة التجارية",
-    "coffee": "قهوة",
     "e.g. ABCD-1234": "مثال: ABCD-1234",
-    "e.g. Grab a cup, sit back, and enjoy free WiFi": "مثال: اطلب كوبًا، استرخِ، واستمتع بواي فاي مجاني",
-    "logo": "شعار",
-    "portal": "بوابة",
-    "theme": "سمة"
+    "e.g. Grab a cup, sit back, and enjoy free WiFi": "مثال: اطلب كوبًا، استرخِ، واستمتع بواي فاي مجاني"
   },
   "success": {
     "Theme settings saved": "تم حفظ إعدادات السمة",
