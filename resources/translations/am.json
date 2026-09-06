@@ -6,17 +6,18 @@
     "Invalid voucher code": "ልክ ያልሆነ የቫውቸር ኮድ",
     "Logo must be a PNG, JPG, WEBP, GIF, or SVG image": "አርማው PNG, JPG, WEBP, GIF ወይም SVG ምስል መሆን አለበት",
     "Please enter a voucher code": "እባክዎ የቫውቸር ኮድ ያስገቡ",
+    "That variant no longer exists.": "ያ ስሪት ከእንግዲህ የለም።",
     "This voucher has already been used": "ይህ ቫውቸር ቀደም ብሎ ጥቅም ላይ ውሏል",
     "Unable to apply voucher. Please try again": "ቫውቸሩን መጠቀም አልተቻለም። እባክዎ እንደገና ይሞክሩ",
     "Unable to identify your device": "መሣሪያዎን መለየት አልተቻለም",
+    "Unable to save the image": "ምስሉን ማስቀመጥ አልተቻለም",
     "Unable to save theme settings": "የገጽታ ቅንብሮችን ማስቀመጥ አልተቻለም",
     "Voucher applied, but connection failed. Please try again": "ቫውቸሩ ጥቅም ላይ ውሏል፣ ነገር ግን ግንኙነት አልተሳካም። እባክዎ እንደገና ይሞክሩ",
     "Voucher code not found": "የቫውቸር ኮድ አልተገኘም"
   },
   "info": {
     "Connected via voucher": "በቫውቸር በኩል ተገናኝቷል",
-    "Logged in successfully": "በተሳካ ሁኔታ ገብተዋል",
-    "Select the Coffee Shop theme as your captive portal theme to configure it": "ለማዋቀር የቡና ሱቅ ገጽታን እንደ ካፕቲቭ ፖርታል ገጽታዎ ይምረጡ"
+    "Logged in successfully": "በተሳካ ሁኔታ ገብተዋል"
   },
   "label": {
     "Admin Sign In": "የአስተዳዳሪ መግቢያ",
@@ -29,6 +30,7 @@
     "Connected": "ተገናኝቷል",
     "Customize the coffee-shop captive portal shown to your customers.": "ለደንበኞችዎ የሚታየውን የቡና ሱቅ ካፕቲቭ ፖርታል ያብጁ።",
     "Displayed at the top of the portal. PNG, JPG, WEBP, GIF, or SVG.": "በፖርታሉ አናት ላይ ይታያል። PNG, JPG, WEBP, GIF ወይም SVG።",
+    "Editing variant": "ስሪት ማስተካከል",
     "Enter Voucher Code": "የቫውቸር ኮድ ያስገቡ",
     "Grab a cup, sit back, and enjoy free WiFi": "ስኒ ይያዙ፣ ተመቻችተው ይቀመጡ እና ነጻ WiFi ይደሰቱ",
     "IP": "IP",
@@ -49,14 +51,8 @@
     "Username": "የተጠቃሚ ስም",
     "Welcome Text": "የእንኳን ደህና መጡ ጽሑፍ",
     "WiFi Hotspot": "የWiFi ሆትስፖት",
-    "banner": "ባነር",
-    "branding": "ብራንዲንግ",
-    "coffee": "ቡና",
     "e.g. ABCD-1234": "ለምሳሌ ABCD-1234",
-    "e.g. Grab a cup, sit back, and enjoy free WiFi": "ለምሳሌ፦ ስኒ ይያዙ፣ ተመቻችተው ይቀመጡ እና ነጻ WiFi ይደሰቱ",
-    "logo": "አርማ",
-    "portal": "ፖርታል",
-    "theme": "ገጽታ"
+    "e.g. Grab a cup, sit back, and enjoy free WiFi": "ለምሳሌ፦ ስኒ ይያዙ፣ ተመቻችተው ይቀመጡ እና ነጻ WiFi ይደሰቱ"
   },
   "success": {
     "Theme settings saved": "የገጽታ ቅንብሮች ተቀምጠዋል",

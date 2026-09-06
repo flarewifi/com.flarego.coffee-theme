@@ -2,14 +2,20 @@
 // admin-editable portal content: the welcome/banner text, the brand logo, and
 // the banner image.
 //
-// Text is a JSON blob in the theme variant store (api.Themes().Config());
-// uploaded images are files in the matching variant file store
-// (api.Themes().Storage()). Reading and writing through those, rather than the
-// plugin-wide stores, is what gives each saved variant its own copy of both.
+// Text is a JSON blob in a variant's own settings store; uploaded images are
+// files in its matching file store. Reading and writing through a variant,
+// rather than the plugin-wide stores, is what gives each saved look its own
+// copy of both.
 //
 // The config records only each image's stored filename (empty == fall back to
 // the bundled default), so mutable uploads and immutable bundled defaults never
 // get confused.
+//
+// Every function that touches a store takes the sdkapi.IThemesVariant to act
+// on, rather than resolving the current one itself: the admin settings page
+// can be opened against ANY saved variant (the Captive Portal list links to it with
+// ?variant=), and only the caller knows which one this request is for.
+// api.Themes().GetVariant("") is the current variant.
 package settings
 
 import (
@@ -39,12 +45,13 @@ type Settings struct {
 	BannerFile string `json:"banner_file"`
 }
 
-// Get returns the saved settings, or a zero-value Settings (all defaults) when
-// nothing has been saved yet or the stored blob is unreadable.
-func Get(api sdkapi.IPluginApi) Settings {
+// Get returns the settings saved in one variant, or a zero-value Settings
+// (all defaults) when nothing has been saved yet or the stored blob is
+// unreadable.
+func Get(v sdkapi.IThemesVariant) Settings {
 	var s Settings
 
-	b, err := api.Themes().Config().Read(configKey)
+	b, err := v.Config().Read(configKey)
 	if err != nil {
 		return s
 	}
@@ -56,30 +63,30 @@ func Get(api sdkapi.IPluginApi) Settings {
 	return s
 }
 
-// Save persists the given settings.
-func Save(api sdkapi.IPluginApi, s *Settings) error {
+// Save persists the given settings into one variant.
+func Save(v sdkapi.IThemesVariant, s *Settings) error {
 	b, err := json.Marshal(s)
 	if err != nil {
 		return err
 	}
 
-	return api.Themes().Config().Write(configKey, b)
+	return v.Config().Write(configKey, b)
 }
 
-// LogoURL resolves the brand-logo URL: the uploaded file when present,
-// otherwise the bundled default.
-func LogoURL(api sdkapi.IPluginApi, s Settings) string {
-	if s.LogoFile != "" && api.Themes().Storage().Exists(s.LogoFile) {
-		return api.Themes().Storage().UrlFor(s.LogoFile)
+// LogoURL resolves the brand-logo URL: this variant's own uploaded file
+// when present, otherwise the bundled default.
+func LogoURL(api sdkapi.IPluginApi, v sdkapi.IThemesVariant, s Settings) string {
+	if s.LogoFile != "" && v.Storage().Exists(s.LogoFile) {
+		return v.Storage().UrlFor(s.LogoFile)
 	}
 	return api.Http().Helpers().PublicPath(defaultLogo)
 }
 
-// BannerURL resolves the banner-image URL: the uploaded file when present,
-// otherwise the bundled default.
-func BannerURL(api sdkapi.IPluginApi, s Settings) string {
-	if s.BannerFile != "" && api.Themes().Storage().Exists(s.BannerFile) {
-		return api.Themes().Storage().UrlFor(s.BannerFile)
+// BannerURL resolves the banner-image URL: this variant's own uploaded file
+// when present, otherwise the bundled default.
+func BannerURL(api sdkapi.IPluginApi, v sdkapi.IThemesVariant, s Settings) string {
+	if s.BannerFile != "" && v.Storage().Exists(s.BannerFile) {
+		return v.Storage().UrlFor(s.BannerFile)
 	}
 	return api.Http().Helpers().PublicPath(defaultBanner)
 }
@@ -102,7 +109,7 @@ func BannerText(api sdkapi.IPluginApi, s Settings) string {
 // runs during plugin registration and must never abort startup. The legacy
 // files are left in place as a safety net.
 func MigrateLegacySettings(api sdkapi.IPluginApi) {
-	if _, err := api.Themes().Config().Read(configKey); err == nil {
+	if _, err := api.Themes().GetVariant("").Config().Read(configKey); err == nil {
 		// Already migrated -- the key's presence in the variant store IS the marker.
 		return
 	}
@@ -126,7 +133,7 @@ func MigrateLegacySettings(api sdkapi.IPluginApi) {
 	// Written LAST, deliberately: this key IS the already-migrated marker, so
 	// writing it before the images would make a crash in between lose them
 	// permanently.
-	if err := api.Themes().Config().Write(configKey, b); err != nil {
+	if err := api.Themes().GetVariant("").Config().Write(configKey, b); err != nil {
 		api.Logger().Error("coffee-theme: failed to migrate settings into the theme variant: " + err.Error())
 	}
 }
@@ -149,7 +156,7 @@ func copyLegacyImage(api sdkapi.IPluginApi, name string) {
 		return
 	}
 
-	if _, err := api.Themes().Storage().Write(name, data); err != nil {
+	if _, err := api.Themes().GetVariant("").Storage().Write(name, data); err != nil {
 		api.Logger().Error("coffee-theme: failed to migrate image " + name + ": " + err.Error())
 	}
 }
