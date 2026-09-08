@@ -1,19 +1,17 @@
-//go:build !mono
-
-// Package main is the entry point for the Coffee Shop portal theme plugin.
 package main
 
 import (
 	sdkapi "sdk/api"
 
-	"com.flarego.coffee-theme/app"
-	"com.flarego.coffee-theme/app/theme"
+	"com.flarego.coffee-theme/plugin"
 )
 
 func main() {}
 
+// Init is the symbol the .so loader resolves by name (see PluginApi.Load). It
+// exists only to re-export plugin.Init from package main, which
+// -buildmode=plugin requires and which nothing can import. Keep it a pure
+// delegation; real work belongs in plugin/.
 func Init(api sdkapi.IPluginApi) error {
-	app.SetupRoutes(api)
-	theme.SetPortalTheme(api)
-	return nil
+	return plugin.Init(api)
 }
