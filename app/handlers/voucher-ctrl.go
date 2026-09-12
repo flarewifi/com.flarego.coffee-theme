@@ -50,8 +50,11 @@ func PortalVoucherCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 			return
 		}
 
-		// Reject already-used vouchers (also guards the check-then-activate race:
-		// a second request that found the same voucher is rejected here).
+		// Reject already-used vouchers. This is a cheap pre-filter only -- it
+		// is not atomic with Activate() below, which claims the voucher
+		// atomically before granting any credits (#1490), so a genuinely
+		// concurrent double-submit that passes this check twice still can't
+		// double-activate.
 		if voucher.ActivatedAt() != nil {
 			res.FlashMsg(w, r, api.Translate("error", "This voucher has already been used"), sdkapi.FlashMsgError)
 			res.RedirectToPortal(w, r)
