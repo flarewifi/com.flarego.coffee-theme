@@ -121,6 +121,9 @@ templ PortalIndexPage(api sdkapi.IPluginApi, data PortalIndexData) {
 			@InternetStatus(api, data.IsOnline)
 		</div>
 	</div>
+	// Home page system sound: the theme's portal_index sound, else the operator's
+	// "Portal Welcome" upload. Renders nothing when the slot is empty or disabled.
+	@api.Sounds().RenderPlayer(sdkapi.SoundPortalIndex)
 }
 
 templ StatusBar(api sdkapi.IPluginApi, isConnected bool) {
