@@ -5,7 +5,7 @@
   "version": "1.0.33",
   "opkg_packages": null,
   "apk_packages": null,
-  "sdk": "1.4.81",
+  "sdk": "1.4.82",
   "preinstall": "",
   "postinstall": "",
   "preuninstall": "",
