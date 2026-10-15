@@ -15,7 +15,7 @@
 // on, rather than resolving the current one itself: the admin settings page
 // can be opened against ANY saved variant (the Captive Portal list links to it with
 // ?variant=), and only the caller knows which one this request is for.
-// api.Themes().GetVariant("") is the current variant.
+// api.Themes().GetDefaultVariant() is the applied variant.
 package settings
 
 import (
@@ -109,7 +109,13 @@ func BannerText(api sdkapi.IPluginApi, s Settings) string {
 // runs during plugin registration and must never abort startup. The legacy
 // files are left in place as a safety net.
 func MigrateLegacySettings(api sdkapi.IPluginApi) {
-	if _, err := api.Themes().GetVariant("").Config().Read(configKey); err == nil {
+	v, err := api.Themes().GetDefaultVariant()
+	if err != nil {
+		api.Logger().Error("coffee-theme: variant migration: resolve applied variant: " + err.Error())
+		return
+	}
+
+	if _, err := v.Config().Read(configKey); err == nil {
 		// Already migrated -- the key's presence in the variant store IS the marker.
 		return
 	}
@@ -127,13 +133,13 @@ func MigrateLegacySettings(api sdkapi.IPluginApi) {
 	}
 
 	for _, name := range []string{s.LogoFile, s.BannerFile} {
-		copyLegacyImage(api, name)
+		copyLegacyImage(api, v, name)
 	}
 
 	// Written LAST, deliberately: this key IS the already-migrated marker, so
 	// writing it before the images would make a crash in between lose them
 	// permanently.
-	if err := api.Themes().GetVariant("").Config().Write(configKey, b); err != nil {
+	if err := v.Config().Write(configKey, b); err != nil {
 		api.Logger().Error("coffee-theme: failed to migrate settings into the theme variant: " + err.Error())
 	}
 }
@@ -145,7 +151,7 @@ func MigrateLegacySettings(api sdkapi.IPluginApi) {
 // copyLegacyImage copies one stored upload from plugin storage into the current
 // variant's storage. A missing or unreadable file is skipped rather than fatal:
 // the URL resolvers already fall back to the bundled default.
-func copyLegacyImage(api sdkapi.IPluginApi, name string) {
+func copyLegacyImage(api sdkapi.IPluginApi, v sdkapi.IThemesVariant, name string) {
 	if name == "" || !api.Storage().Exists(name) {
 		return
 	}
@@ -156,7 +162,7 @@ func copyLegacyImage(api sdkapi.IPluginApi, name string) {
 		return
 	}
 
-	if _, err := api.Themes().GetVariant("").Storage().Write(name, data); err != nil {
+	if _, err := v.Storage().Write(name, data); err != nil {
 		api.Logger().Error("coffee-theme: failed to migrate image " + name + ": " + err.Error())
 	}
 }

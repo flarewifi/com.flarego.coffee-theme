@@ -179,14 +179,18 @@ func resolveImageField(api sdkapi.IPluginApi, v sdkapi.IThemesVariant, r *http.R
 // instead of quietly overwriting the live look under a deleted variant's name.
 func editedVariant(api sdkapi.IPluginApi, w http.ResponseWriter, r *http.Request) (sdkapi.IThemesVariant, string, bool) {
 	slug := strings.TrimSpace(r.URL.Query().Get("variant"))
-	v := api.Themes().GetVariant(slug)
-
-	// An unresolvable variant with no slug asked for means the theme could not
-	// resolve a CURRENT variant either. There is nowhere to send the operator
-	// -- the redirect below lands right back here -- so fall through: the page
-	// then shows the theme's own defaults and the save refuses, which is
-	// visible without being a redirect loop.
-	if v.Slug() != "" || slug == "" {
+	if slug == "" {
+		// With no applied variant either there is nowhere to send the operator
+		// -- the redirect below lands right back here -- so fall through: the
+		// page then shows the theme's own defaults and the save refuses, which
+		// is visible without being a redirect loop.
+		v, err := api.Themes().GetDefaultVariant()
+		if err != nil {
+			api.Logger().Error("coffee-theme: resolve applied variant: " + err.Error())
+		}
+		return v, "", true
+	}
+	if v, err := api.Themes().GetVariant(slug); err == nil {
 		return v, slug, true
 	}
 
