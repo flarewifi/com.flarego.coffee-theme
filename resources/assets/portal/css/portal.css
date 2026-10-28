@@ -321,9 +321,9 @@ body.coffee-portal {
  * Global portal shell — plain Bootstrap 5 classes used by CORE and OTHER
  * PLUGINS (payment options, insert-coin, voucher redemption, pppoe status,
  * etc.), not just this theme's own bespoke markup. Those pages deliberately
- * target Bootstrap's real class names — see the "theme glass card" / "Default
- * Bootstrap .btn-secondary" comments in core/resources/views/portal/payments/
- * payment-options.templ — so ANY theme can hook in via plain CSS without the
+ * target Bootstrap's real class names — the shared payment picker
+ * (core/shared/paymentsview/picker.templ) and each seller's own payment page
+ * do — so ANY theme can hook in via plain CSS without the
  * core/plugin views needing to know this theme exists. Scoped under
  * body.coffee-portal (present on every page this theme renders) so nothing
  * here leaks outside the portal even if this stylesheet were ever loaded
