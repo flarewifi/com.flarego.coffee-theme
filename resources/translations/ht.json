@@ -1,7 +1,6 @@
 {
   "error": {
     "Banner must be a PNG, JPG, WEBP, GIF, or SVG image": "Bannyè a dwe yon imaj PNG, JPG, WEBP, GIF, oswa SVG",
-    "Invalid credentials": "Idantifyan yo pa valab",
     "Invalid form data": "Done fòmilè yo pa valab",
     "Invalid voucher code": "Kòd vouchè a pa valab",
     "Logo must be a PNG, JPG, WEBP, GIF, or SVG image": "Logo a dwe yon imaj PNG, JPG, WEBP, GIF, oswa SVG",
