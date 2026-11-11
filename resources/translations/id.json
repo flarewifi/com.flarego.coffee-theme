@@ -1,7 +1,6 @@
 {
   "error": {
     "Banner must be a PNG, JPG, WEBP, GIF, or SVG image": "Banner harus berupa gambar PNG, JPG, WEBP, GIF, atau SVG",
-    "Invalid credentials": "Kredensial tidak valid",
     "Invalid form data": "Data formulir tidak valid",
     "Invalid voucher code": "Kode voucher tidak valid",
     "Logo must be a PNG, JPG, WEBP, GIF, or SVG image": "Logo harus berupa gambar PNG, JPG, WEBP, GIF, atau SVG",

@@ -1,7 +1,6 @@
 {
   "error": {
     "Banner must be a PNG, JPG, WEBP, GIF, or SVG image": "Ảnh banner phải là PNG, JPG, WEBP, GIF hoặc SVG",
-    "Invalid credentials": "Thông tin đăng nhập không hợp lệ",
     "Invalid form data": "Dữ liệu biểu mẫu không hợp lệ",
     "Invalid voucher code": "Mã voucher không hợp lệ",
     "Logo must be a PNG, JPG, WEBP, GIF, or SVG image": "Ảnh logo phải là PNG, JPG, WEBP, GIF hoặc SVG",
