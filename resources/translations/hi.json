@@ -1,7 +1,6 @@
 {
   "error": {
     "Banner must be a PNG, JPG, WEBP, GIF, or SVG image": "बैनर PNG, JPG, WEBP, GIF, या SVG इमेज होनी चाहिए",
-    "Invalid credentials": "अमान्य क्रेडेंशियल",
     "Invalid form data": "अमान्य फ़ॉर्म डेटा",
     "Invalid voucher code": "अमान्य वाउचर कोड",
     "Logo must be a PNG, JPG, WEBP, GIF, or SVG image": "लोगो PNG, JPG, WEBP, GIF, या SVG इमेज होना चाहिए",
