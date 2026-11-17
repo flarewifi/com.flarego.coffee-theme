@@ -1,0 +1,29 @@
+/* Right-to-left fixes for this theme's own physical rules (#3851). Core
+   already sets dir="rtl", swaps in Bootstrap's RTL build and keeps
+   tel/url/email/number inputs left to right; this file only mirrors what
+   portal.css pins to the left or right. Listed last in theme.css, so every
+   rule is scoped to [dir="rtl"] and left-to-right pages are untouched.
+
+   Left as drawn on purpose: the corner leaves, a mirrored pair. */
+
+/* The gap stays between a button's icon and its label. */
+[dir="rtl"] .action-buttons .btn-icon {
+  margin-right: 0;
+  margin-left: 6px;
+}
+
+/* Admin sign-in labels and fields line up from the right edge. */
+[dir="rtl"] .login-card .form-label,
+[dir="rtl"] .login-card form > div {
+  text-align: right;
+}
+
+/* Voucher codes are Latin letters and digits, so a typed code reads left to
+   right (a code starting with digits would otherwise reorder); the
+   translated placeholder keeps the page's direction. */
+[dir="rtl"] #voucher-code {
+  direction: ltr;
+}
+[dir="rtl"] #voucher-code:placeholder-shown {
+  direction: rtl;
+}

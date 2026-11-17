@@ -1,6 +1,7 @@
 {
   "theme.css": [
-    "./portal/css/portal.css"
+    "./portal/css/portal.css",
+    "./portal/css/rtl.css"
   ],
   "theme.js": [
     "./portal/js/theme.js"
