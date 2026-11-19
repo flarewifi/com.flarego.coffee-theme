@@ -16,7 +16,7 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 		JsFile:        "theme.js",
 		CssFile:       "theme.css",
 		CssLib:        sdkapi.CssLibBootstrap5,
-		PreviewImage:  "images/preview.png",
+		PreviewImage:  "images/preview.webp",
 		EditRouteName: "admin:coffee-theme:settings",
 		LayoutBuilder: func(w http.ResponseWriter, r *http.Request, c sdkapi.IThemeComponents) {
 			// The login page reuses this layout; only the portal index gets the
