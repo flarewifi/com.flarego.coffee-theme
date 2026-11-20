@@ -18,6 +18,14 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 		CssLib:        sdkapi.CssLibBootstrap5,
 		PreviewImage:  "images/preview.webp",
 		EditRouteName: "admin:coffee-theme:settings",
+		// Each variant's own banner and logo.
+		VariantPreviewFactory: func(v sdkapi.IThemesVariant) sdkapi.ThemeVariantPreview {
+			cfg := settings.Get(v)
+			return sdkapi.ThemeVariantPreview{
+				ImageUrl: settings.BannerURL(api, v, cfg),
+				LogoUrl:  settings.LogoURL(api, v, cfg),
+			}
+		},
 		LayoutBuilder: func(w http.ResponseWriter, r *http.Request, c sdkapi.IThemeComponents) {
 			// The login page reuses this layout; only the portal index gets the
 			// "coffee-index" body class so its card styling never leaks onto login.
