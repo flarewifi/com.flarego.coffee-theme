@@ -249,6 +249,97 @@ body.coffee-portal {
 }
 .voucher-apply { flex: 0 0 auto; }
 
+/* ---- Device code (issue #4230) ----
+ * The code row inside the wifi credits box, under the time/data metrics, and
+ * the restore box under the voucher form. Wrapping gives the code row its own
+ * full-width line below the metrics. */
+.coffee-card .session-summary {
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+.device-code {
+  flex: 0 0 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(111, 78, 55, 0.2);
+  text-align: start;
+}
+/* Alone in the box (no time or data shown): no divider above it. */
+.device-code:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.device-code-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.device-code-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  color: var(--coffee-espresso);
+}
+.device-code-toggle {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--coffee-brown);
+  border-radius: 12px;
+  background: var(--coffee-card);
+  color: var(--coffee-brown);
+  font-size: 20px;
+  cursor: pointer;
+}
+.device-code-toggle:hover { background: var(--coffee-cream); }
+.device-code-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(111, 78, 55, 0.25);
+}
+.device-code-hint,
+.device-code-form-hint {
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: #7a6754;
+}
+.device-code-form {
+  margin-top: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px dashed var(--coffee-tan);
+  border-radius: 14px;
+  background: rgba(161, 129, 94, 0.08);
+  text-align: start;
+}
+.device-code-form-label {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--coffee-ink);
+}
+.device-code-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.device-code-input:focus {
+  border-color: var(--coffee-tan);
+  box-shadow: 0 0 0 0.2rem rgba(111, 78, 55, 0.18);
+}
+.device-code-submit { flex: 0 0 auto; }
+
 /* ---- Internet status ---- */
 .internet-status { margin-top: 14px; }
 .internet-status p { margin: 0; font-size: 0.8rem; font-weight: 600; }

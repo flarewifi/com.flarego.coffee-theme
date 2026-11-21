@@ -18,6 +18,11 @@ type PortalIndexData struct {
 	Summary          sdkapi.SessionSummary
 	Client           sdkapi.IClientDevice
 
+	// Device code (issue #4230): the phone's code, "" when it has no wifi
+	// credits. RedeemURL is core's redeem route; "" hides the restore box.
+	DeviceCode string
+	RedeemURL  string
+
 	// Admin-editable branding.
 	LogoURL    string
 	BannerURL  string
@@ -68,7 +73,7 @@ templ PortalIndexPage(api sdkapi.IPluginApi, data PortalIndexData) {
 				sdkapi.PortalEventSessionConnected, sdkapi.PortalEventSessionDisconnected, sdkapi.PortalEventSessionActivated) }
 			hx-swap="innerHTML"
 		>
-			@SessionInfo(api, data.Client, data.Session, data.Summary, data.IsSessionRunning)
+			@SessionInfo(api, data.Client, data.Session, data.Summary, data.IsSessionRunning, data.DeviceCode)
 		</div>
 		<!-- Action buttons — default-size Bootstrap buttons stacked vertically
 		     (d-grid). The primary (insert coin) is filled coffee-brown; the rest
@@ -110,6 +115,35 @@ templ PortalIndexPage(api sdkapi.IPluginApi, data PortalIndexData) {
 				<button type="submit" class="btn btn-coffee voucher-apply">{ api.Translate("label", "Apply") }</button>
 			</div>
 		</form>
+		// Restore wifi credits with a device code from another access point
+		// (issue #4230). A plain POST like the voucher form: core flashes the
+		// outcome and redirects to the portal, which re-renders the wifi
+		// credits box and the nav buttons.
+		if data.RedeemURL != "" {
+			<form
+				class="device-code-form"
+				method="POST"
+				action={ templ.SafeURL(data.RedeemURL) }
+			>
+				<label class="device-code-form-label" for="device-code-input">{ api.Translate("label", "Have a device code?") }</label>
+				<div class="voucher-input-group">
+					<input
+						id="device-code-input"
+						name="device_code"
+						type="text"
+						class="form-control device-code-input"
+						dir="ltr"
+						autocomplete="off"
+						autocapitalize="characters"
+						spellcheck="false"
+						aria-describedby="device-code-form-hint"
+						required
+					/>
+					<button type="submit" class="btn btn-coffee device-code-submit">{ api.Translate("label", "Restore") }</button>
+				</div>
+				<div id="device-code-form-hint" class="device-code-form-hint">{ api.Translate("label", "Enter the code from your other access point to get your wifi credits back.") }</div>
+			</form>
+		}
 		<!-- Internet status -->
 		<div
 			class="internet-status"
@@ -162,14 +196,19 @@ func queuedExtraDataMb(session sdkapi.SessionData, summary sdkapi.SessionSummary
 	return 0
 }
 
-templ SessionInfo(api sdkapi.IPluginApi, clnt sdkapi.IClientDevice, session sdkapi.SessionData, summary sdkapi.SessionSummary, isRunning bool) {
+// SessionInfo is the wifi credits box: time and data left while the phone is
+// connected, and also while it is not but still holds wifi credits (a
+// device-code restore starts no session), plus its device code.
+templ SessionInfo(api sdkapi.IPluginApi, clnt sdkapi.IClientDevice, session sdkapi.SessionData, summary sdkapi.SessionSummary, isRunning bool, deviceCode string) {
 	{{ hideTime := timeLeftHidden(api) }}
-	if isRunning && !session.Exhausted() && !(hideTime && summary.DataMb <= 0) {
+	{{ live := isRunning && !session.Exhausted() && !(hideTime && summary.DataMb <= 0) }}
+	{{ idle := !isRunning && ((summary.TimeSecs > 0 && !hideTime) || summary.DataMb > 0) }}
+	if live || idle || deviceCode != "" {
 		<div class="session-summary">
-			if summary.TimeSecs > 0 && !hideTime {
+			if (live || idle) && summary.TimeSecs > 0 && !hideTime {
 				<div class="session-metric">
 					<span class="session-label">{ api.Translate("label", "Time Left") }</span>
-					if session.EnforcesTime() {
+					if live && session.EnforcesTime() {
 						// The live ticker only ever counts down the ACTIVE session's own
 						// value -- data-extra-time-secs is what theme.js's setRenderer
 						// adds back on top each render so the figure on screen stays the
@@ -184,10 +223,10 @@ templ SessionInfo(api sdkapi.IPluginApi, clnt sdkapi.IClientDevice, session sdka
 					}
 				</div>
 			}
-			if summary.DataMb > 0 {
+			if (live || idle) && summary.DataMb > 0 {
 				<div class="session-metric">
 					<span class="session-label">{ api.Translate("label", "Remaining Data") }</span>
-					if session.EnforcesData() {
+					if live && session.EnforcesData() {
 						// See the time metric above -- same data-extra-*-mb mechanism.
 						@api.UI().LiveSession(clnt).RemainingDataMbWithOpts(sdkapi.LiveSessionOpts{
 							Class:   "session-value",
@@ -197,6 +236,32 @@ templ SessionInfo(api sdkapi.IPluginApi, clnt sdkapi.IClientDevice, session sdka
 					} else {
 						<span class="session-value">{ sdkutils.FormatByteData(summary.DataMb) }</span>
 					}
+				</div>
+			}
+			if deviceCode != "" {
+				// Masked on every render; the code rides only in the data
+				// attribute, for theme.js to reveal on the eye button.
+				<div class="device-code" data-device-code={ deviceCode }>
+					<span class="session-label">{ api.Translate("label", "Device code") }</span>
+					<div class="device-code-row">
+						<span class="device-code-value" data-device-code-value dir="ltr">••••••</span>
+						<button
+							type="button"
+							class="device-code-toggle"
+							data-device-code-toggle
+							aria-label={ api.Translate("label", "Show device code") }
+							data-label-show={ api.Translate("label", "Show device code") }
+							data-label-hide={ api.Translate("label", "Hide device code") }
+						>
+							<span data-device-code-icon="show">
+								@templ.Raw(api.UI().IconAttrs("eye", "", "", "aria-hidden=\"true\""))
+							</span>
+							<span data-device-code-icon="hide" hidden>
+								@templ.Raw(api.UI().IconAttrs("eye-slash", "", "", "aria-hidden=\"true\""))
+							</span>
+						</button>
+					</div>
+					<div class="device-code-hint">{ api.Translate("label", "Save this code to keep your wifi credits when you join another access point.") }</div>
 				</div>
 			}
 		</div>
