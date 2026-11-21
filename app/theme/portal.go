@@ -89,6 +89,7 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 			// zero queued behind it) on error.
 			summary, err := clnt.SessionSummary(r.Context())
 			if err != nil {
+				api.Logger().Error(fmt.Sprintf("coffee-theme index: session summary error: %v", err))
 				session := indexData.Session
 				summary = sdkapi.SessionSummary{
 					IsConnected: indexData.IsSessionRunning,
