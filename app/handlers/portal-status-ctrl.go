@@ -6,7 +6,6 @@ import (
 
 	sdkapi "sdk/api"
 
-	"com.flarego.coffee-theme/app/utils"
 	"com.flarego.coffee-theme/resources/views/portal"
 )
 
@@ -34,7 +33,6 @@ func PortalSessionInfoCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 		var isRunning bool
 		var session sdkapi.SessionData
 		var summary sdkapi.SessionSummary
-		var deviceCode string
 
 		clnt, err := api.Http().GetClientDevice(r)
 		if err != nil {
@@ -62,10 +60,9 @@ func PortalSessionInfoCtrl(api sdkapi.IPluginApi) http.HandlerFunc {
 					summary.DataMb = session.DataMb
 				}
 			}
-			deviceCode = utils.PortalDeviceCode(r.Context(), api, clnt, summary)
 		}
 
-		portal.SessionInfo(api, clnt, session, summary, isRunning, deviceCode).Render(r.Context(), w)
+		portal.SessionInfo(api, clnt, session, summary, isRunning, summary.HasAccess()).Render(r.Context(), w)
 	}
 }
 

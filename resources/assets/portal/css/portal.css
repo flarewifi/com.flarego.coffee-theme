@@ -250,95 +250,115 @@ body.coffee-portal {
 .voucher-apply { flex: 0 0 auto; }
 
 /* ---- Device code (issue #4230) ----
- * The code row inside the wifi credits box, under the time/data metrics, and
- * the restore box under the voucher form. Wrapping gives the code row its own
- * full-width line below the metrics. */
+ * Core's compact components (.device-code* row, .dcf* claim form) in the coffee
+ * palette. Scoped under .coffee-card to win over core's base CSS. Wrapping gives
+ * the one-line code row its own full-width line under the metrics. */
 .coffee-card .session-summary {
   flex-wrap: wrap;
   row-gap: 8px;
 }
-.device-code {
+.coffee-card .device-code {
   flex: 0 0 100%;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(111, 78, 55, 0.2);
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  margin-block: 0;
+  padding-block-start: 10px;
+  border-block-start: 1px solid rgba(111, 78, 55, 0.15);
   text-align: start;
 }
 /* Alone in the box (no time or data shown): no divider above it. */
-.device-code:first-child {
-  padding-top: 0;
-  border-top: 0;
+.coffee-card .device-code:first-child {
+  padding-block-start: 0;
+  border-block-start: 0;
 }
-.device-code-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.device-code-value {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 5px;
-  color: var(--coffee-espresso);
-}
-.device-code-toggle {
-  flex: 0 0 auto;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--coffee-brown);
-  border-radius: 12px;
-  background: var(--coffee-card);
-  color: var(--coffee-brown);
-  font-size: 20px;
-  cursor: pointer;
-}
-.device-code-toggle:hover { background: var(--coffee-cream); }
-.device-code-toggle:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 0.2rem rgba(111, 78, 55, 0.25);
-}
-.device-code-hint,
-.device-code-form-hint {
+.coffee-card .device-code-label {
+  flex: 1 1 auto;
   font-size: 0.72rem;
-  line-height: 1.4;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #7a6754;
+  opacity: 1;
+}
+.coffee-card .device-code-row {
+  flex: 0 0 auto;
+  gap: 4px;
+}
+.coffee-card .device-code-value {
+  flex: 0 0 auto;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--coffee-brown);
+}
+.coffee-card .device-code-toggle {
+  width: auto;
+  height: auto;
+  padding: 5px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
   color: #7a6754;
 }
-.device-code-form {
-  margin-top: 12px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  border: 1px dashed var(--coffee-tan);
-  border-radius: 14px;
-  background: rgba(161, 129, 94, 0.08);
-  text-align: start;
+.coffee-card .device-code-toggle:hover { color: var(--coffee-brown); background: transparent; }
+.coffee-card .device-code-toggle:focus-visible {
+  box-shadow: 0 0 0 0.2rem rgba(111, 78, 55, 0.25);
 }
-.device-code-form-label {
-  margin: 0;
+.coffee-card .device-code-icon svg {
+  width: 15px;
+  height: 15px;
+}
+.coffee-card .device-code-info,
+.coffee-card .dcf-info {
+  color: #7a6754;
+  opacity: 0.55;
+}
+.coffee-card .device-code-info svg { width: 12px; height: 12px; }
+
+/* Claim form, under the voucher form. */
+.coffee-card .dcf {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border: 1px dashed rgba(111, 78, 55, 0.5);
+  border-radius: 14px;
+  background: rgba(111, 78, 55, 0.05);
+}
+.coffee-card .dcf-label {
+  justify-content: center;
+  margin-block-end: 10px;
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--coffee-ink);
+  color: #6d5a49;
 }
-.device-code-input {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing: 3px;
-  text-transform: uppercase;
+.coffee-card .dcf-info svg { width: 13px; height: 13px; }
+.coffee-card .dcf-input {
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid rgba(111, 78, 55, 0.4);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--coffee-brown);
 }
-.device-code-input:focus {
+.coffee-card .dcf-input:focus {
   border-color: var(--coffee-tan);
   box-shadow: 0 0 0 0.2rem rgba(111, 78, 55, 0.18);
 }
-.device-code-submit { flex: 0 0 auto; }
+.coffee-card .dcf-btn {
+  width: auto;
+  height: 46px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--coffee-brown);
+  color: #fff5e9;
+  letter-spacing: 0.08em;
+}
+.coffee-card .dcf-btn:hover { background: var(--coffee-espresso); filter: none; }
+.coffee-card .dcf-btn:focus-visible {
+  box-shadow: 0 0 0 0.2rem rgba(111, 78, 55, 0.35);
+}
 
 /* ---- Internet status ---- */
 .internet-status { margin-top: 14px; }

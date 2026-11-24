@@ -8,7 +8,6 @@ import (
 	sdkapi "sdk/api"
 
 	"com.flarego.coffee-theme/app/settings"
-	"com.flarego.coffee-theme/app/utils"
 	"com.flarego.coffee-theme/resources/views/portal"
 )
 
@@ -49,19 +48,12 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 			v := api.Themes().GetPortalThemeVariant(r)
 			cfg := settings.Get(v)
 
-			// Core owns the redeem route (issue #4224); "" hides the restore box.
-			redeemURL, ok := api.Http().Helpers().UrlForPkgRoute("com.flarego.core", "portal:device-code:redeem")
-			if !ok {
-				redeemURL = ""
-			}
-
 			indexData := portal.PortalIndexData{
 				Navs:       api.Http().Navs().GetPortalItems(r),
 				IsOnline:   api.Machine().IsOnline(),
 				LogoURL:    settings.LogoURL(api, v, cfg),
 				BannerURL:  settings.BannerURL(api, v, cfg),
 				BannerText: settings.BannerText(api, cfg),
-				RedeemURL:  redeemURL,
 			}
 
 			clnt, err := api.Http().GetClientDevice(r)
@@ -104,7 +96,6 @@ func SetPortalTheme(api sdkapi.IPluginApi) {
 				}
 			}
 			indexData.Summary = summary
-			indexData.DeviceCode = utils.PortalDeviceCode(r.Context(), api, clnt, summary)
 
 			return sdkapi.ViewPage{PageContent: portal.PortalIndexPage(api, indexData)}
 		},
